@@ -1,13 +1,13 @@
-package it.matteogaliazzo.eis;
+package it.unipd.dei.eis;
 
 import com.opencsv.bean.CsvBindByPosition;
-import com.opencsv.bean.CsvCustomBindByPosition;
+
 /**
  * classe rubata (preso ispirazione) da the guardian api
  */
 
 //Identifier,URL,Title,Fulltext,Date,Source Set,Source
-public class Article {
+public class NYTimesArticle {
     @CsvBindByPosition(position = 0)
     String id;
     @CsvBindByPosition(position = 1)
@@ -22,7 +22,7 @@ public class Article {
     String sourceSet;
     @CsvBindByPosition(position = 6)
     String source;
-    public Article(final String id, final String url, final String title, final String fullText, final String date, final String sourceSet, final String source) {
+    public NYTimesArticle(final String id, final String url, final String title, final String fullText, final String date, final String sourceSet, final String source) {
         this.id = id;
         this.url = url;
         this.title = title;
