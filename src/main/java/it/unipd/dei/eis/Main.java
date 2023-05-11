@@ -2,36 +2,36 @@ package it.unipd.dei.eis;
 
 import com.opencsv.CSVReader;
 
+import com.opencsv.exceptions.CsvValidationException;
 import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
 
-import com.opencsv.bean.CsvToBeanBuilder;
-import com.opencsv.exceptions.CsvException;
+import java.util.ArrayList;
 
 public class Main {
 
-  public static void main(String[] args) throws IOException, CsvException {
+  public static void main(String[] args) {
 
     CSVReader reader = null;
-    try {
-      //parsing a CSV file into CSVReader class constructor
-      reader = new CSVReader(new FileReader("./assets/nytimes_articles_v1.csv"));
+    ArrayList<Article> articles_list = new ArrayList<Article>();
 
-      String[] nextLine;
-      //reads one line at a time
-      while ((nextLine = reader.readNext()) != null) {
-        for (String token : nextLine) {
-          System.out.println(token);
-        }
-        System.out.print("\n");
+    // BAD CODE!!! JUST FOR TESTING
+    try {
+      reader = new CSVReader(new FileReader("./assets/nytimes/nytimes_articles_v2.csv"));
+      String[] nextline;
+      while ((nextline = reader.readNext()) != null) {
+        Article temp_article = new Article(nextline[0], nextline[1], "", nextline[2], nextline[3],
+            nextline[4], nextline[5], nextline[6]);
+        articles_list.add(temp_article);
       }
-//            Article a = new Article()
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (FileNotFoundException e) {
+      throw new RuntimeException(e);
+    } catch (CsvValidationException e) {
+      throw new RuntimeException(e);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
     }
+
+    System.out.println("ELEMENTS IN ARTICLES LIST " + articles_list.size());
 
   }
 }
