@@ -1,5 +1,8 @@
 package it.unipd.dei.eis;
 
+/**
+ * An Article class contains all the most important information of an article
+ */
 public class Article {
 
   private String id;
