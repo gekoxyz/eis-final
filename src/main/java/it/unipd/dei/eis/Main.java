@@ -14,8 +14,6 @@ public class Main {
       nyTimesCsvWrapper.saveArticles();
     } catch (CsvValidationException e) {
       throw new RuntimeException(e);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
     }
   }
 }
