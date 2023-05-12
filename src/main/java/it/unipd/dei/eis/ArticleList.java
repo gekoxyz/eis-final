@@ -18,4 +18,12 @@ public class ArticleList {
     this.articleArrayList = articleArrayList;
   }
 
+  public ArrayList<Article> getArticleArrayList() {
+    return articleArrayList;
+  }
+
+  public void setArticleArrayList(ArrayList<Article> articleArrayList) {
+    this.articleArrayList = articleArrayList;
+  }
+
 }
