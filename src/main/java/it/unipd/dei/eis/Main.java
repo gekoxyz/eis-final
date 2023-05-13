@@ -1,17 +1,18 @@
 package it.unipd.dei.eis;
 
 import com.opencsv.exceptions.CsvValidationException;
-import java.io.IOException;
+import it.unipd.dei.eis.adapters.NyTimesCsvAdapter;
+import it.unipd.dei.eis.serialization.Serializer;
 
 public class Main {
 
   public static void main(String[] args) {
-
-//      reader = new CSVReader(new FileReader("./assets/nytimes/nytimes_articles_v2.csv"));
-    NyTimesCsvWrapper nyTimesCsvWrapper = new NyTimesCsvWrapper(
+    Serializer serializer = new Serializer();
+    NyTimesCsvAdapter nyTimesCsvAdapter = new NyTimesCsvAdapter(
         "./assets/nytimes/nytimes_articles_v2.csv");
     try {
-      nyTimesCsvWrapper.saveArticles();
+      nyTimesCsvAdapter.loadArticles();
+      serializer.serialize(nyTimesCsvAdapter.getArticles());
     } catch (CsvValidationException e) {
       throw new RuntimeException(e);
     }
