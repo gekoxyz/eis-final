@@ -8,11 +8,20 @@ public class Main {
 
   public static void main(String[] args) {
     Serializer serializer = new Serializer();
+
     NyTimesCsvAdapter nyTimesCsvAdapter = new NyTimesCsvAdapter(
         "./assets/nytimes/nytimes_articles_v2.csv");
     try {
       nyTimesCsvAdapter.loadArticles();
       serializer.serialize(nyTimesCsvAdapter.getArticles());
+    } catch (CsvValidationException e) {
+      throw new RuntimeException(e);
+    }
+
+    NyTimesCsvAdapter nyTimesCsvAdapter2 = new NyTimesCsvAdapter("./assets/nytimes/temp.csv");
+    try {
+      nyTimesCsvAdapter2.loadArticles();
+      serializer.serialize(nyTimesCsvAdapter2.getArticles());
     } catch (CsvValidationException e) {
       throw new RuntimeException(e);
     }

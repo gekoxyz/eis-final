@@ -33,9 +33,14 @@ public class NyTimesCsvAdapter {
 
     // Parse CSV and create articles
     try {
-      // TODO: ADD CHECK FOR THIS READNEXT SAFETY
+      // this skips the first line because it defines the fields of the csv
       reader.readNext();
       while ((nextline = reader.readNext()) != null) {
+        // checking that the csv has the correct number of fields
+        if (nextline.length != 7) {
+          throw new CsvValidationException(
+              "[ERROR] - The file doesn't have the correct number of fields");
+        }
         String title = nextline[2];
         String bodyText = nextline[3];
         articlesList.add(new Article(title, bodyText));
