@@ -29,19 +29,11 @@ public class Article {
     this.bodyText = bodyText;
   }
 
-  // It has one more tab so the serializer produces a good article
-  public String toSerializableString() {
-    return "\t<article>\n" +
-        "\t\t<title>" + title + "</title>\n" +
-        "\t\t<bodyText>" + bodyText + "</bodyText>\n" +
-        "\t</article>";
-  }
-
   @Override
   public String toString() {
     return "<article>\n" +
-        "\t<title>" + title + "</title>\n" +
-        "\t<bodyText>" + bodyText + "</bodyText>\n" +
-        "</article>";
+            "\t<title>" + title + "</title>\n" +
+            "\t<bodyText>" + bodyText + "</bodyText>\n" +
+            "</article>";
   }
 }
