@@ -19,7 +19,7 @@ public class Serializer {
   public Serializer() {
   }
 
-  public void serialize(Article[] articlesList) {
+  public void serialize(Article[] articlesList, String fileName) {
     try {
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       DocumentBuilder builder = factory.newDocumentBuilder();
@@ -50,7 +50,7 @@ public class Serializer {
       Transformer transformer = transformerFactory.newTransformer();
       transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 
-      File xmlFile = new File("articles.xml");
+      File xmlFile = new File(fileName);
       StreamResult result = new StreamResult(xmlFile);
       DOMSource source = new DOMSource(document);
       transformer.transform(source, result);
