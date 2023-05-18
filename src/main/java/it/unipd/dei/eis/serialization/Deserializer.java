@@ -19,7 +19,7 @@ public class Deserializer {
   public Article[] deserialize(String fileName) {
     Article[] articles = new Article[0];
     try {
-      File xmlFile = new File("articles.xml");
+      File xmlFile = new File(fileName);
 
       // Create a DocumentBuilderFactory
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
