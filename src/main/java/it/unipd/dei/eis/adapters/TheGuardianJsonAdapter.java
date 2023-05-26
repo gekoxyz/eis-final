@@ -49,7 +49,7 @@ public class TheGuardianJsonAdapter {
   // TODO : http request to the API
   public void request() {
     HttpRequest request = HttpRequest.newBuilder()
-            .uri(URI.create("https://content.guardianapis.com/search"))
+            .uri(URI.create("https://content.guardianapis.com/search?q=&format=json&api-key=***************"))
             .header("theguardian-Host", "content.guardianapis.com")
             .header("theguardian-Key", "api-key-here")
             .method("GET", HttpRequest.BodyPublishers.noBody())
@@ -58,6 +58,16 @@ public class TheGuardianJsonAdapter {
 
     try {
       response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+      //code to elaborate response
+      /*
+      * from the response take response["response"]["results"] and save only the "id" of every item in articlesId
+      *
+      *get the full article for every id
+      *
+      * save every article in articlesList
+      * */
+
+
     } catch (IOException e) {
       e.printStackTrace();
     } catch (InterruptedException e) {
