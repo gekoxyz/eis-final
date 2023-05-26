@@ -1,8 +1,12 @@
 package it.unipd.dei.eis.adapters;
 
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.unipd.dei.eis.Article;
 import com.fasterxml.jackson.databind.JsonNode;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -44,6 +48,23 @@ public class TheGuardianJsonAdapter {
 
   // TODO : http request to the API
   public void request() {
+    HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create("https://content.guardianapis.com/search"))
+            .header("theguardian-Host", "content.guardianapis.com")
+            .header("theguardian-Key", "api-key-here")
+            .method("GET", HttpRequest.BodyPublishers.noBody())
+            .build();
+    HttpResponse<String> response = null;
+
+    try {
+      response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    System.out.println(response.body());
+    //https://content.guardianapis.com/search?q=joe%20biden&api-key=****************&page=1
   }
 
   public Article[] getArticles() {
