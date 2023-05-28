@@ -28,14 +28,19 @@ public class Main {
 //      throw new RuntimeException(e);
 //    }
 
-    Deserializer deserializer = new Deserializer();
+//    Deserializer deserializer = new Deserializer();
 
 //    Article[] articles = deserializer.deserialize("articles.xml");
 //    System.out.println(articles.length + " articles in the XML file");
 
-    TheGuardianJsonAdapter theGuardianJsonAdapter = new TheGuardianJsonAdapter("./assets/the_guardian/theguardian_articles_v1_p01.json");
-    theGuardianJsonAdapter.loadArticles();
+//    TheGuardianJsonAdapter theGuardianJsonAdapter = new TheGuardianJsonAdapter("./assets/the_guardian/theguardian_articles_v1_p01.json");
+//    theGuardianJsonAdapter.loadArticles();
 
-    serializer.serialize(theGuardianJsonAdapter.getArticles(), "articles.xml");
+//    serializer.serialize(theGuardianJsonAdapter.getArticles(), "articles.xml");
+
+    TheGuardianJsonAdapter theGuardianJsonAdapter1 = new TheGuardianJsonAdapter();
+    theGuardianJsonAdapter1.request();
+    theGuardianJsonAdapter1.loadArticles();
+    serializer.serialize(theGuardianJsonAdapter1.getArticles(), "bellecose.xml");
   }
 }

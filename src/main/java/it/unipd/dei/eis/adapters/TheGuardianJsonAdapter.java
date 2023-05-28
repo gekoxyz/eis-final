@@ -1,17 +1,22 @@
 package it.unipd.dei.eis.adapters;
 
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.http.HttpClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.cdimascio.dotenv.Dotenv;
 import it.unipd.dei.eis.Article;
 import com.fasterxml.jackson.databind.JsonNode;
-
 
 import java.io.File;
 import java.io.IOException;
 
+import java.net.URL;
 import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 
 public class TheGuardianJsonAdapter {
 
@@ -21,6 +26,10 @@ public class TheGuardianJsonAdapter {
 
   public TheGuardianJsonAdapter(String filePath) {
     this.filePath = filePath;
+    this.articlesList = new ArrayList<Article>();
+  }
+
+  public TheGuardianJsonAdapter() {
     this.articlesList = new ArrayList<Article>();
   }
 
@@ -46,35 +55,39 @@ public class TheGuardianJsonAdapter {
     }
   }
 
-  // TODO : http request to the API
   public void request() {
-    HttpRequest request = HttpRequest.newBuilder()
-            .uri(URI.create("https://content.guardianapis.com/search?q=&format=json&api-key=***************"))
-            .header("theguardian-Host", "content.guardianapis.com")
-            .header("theguardian-Key", "api-key-here")
-            .method("GET", HttpRequest.BodyPublishers.noBody())
-            .build();
-    HttpResponse<String> response = null;
+    Dotenv dotenv = Dotenv.load();
+//    String apiUrl = "https://content.guardianapis.com/search?api-key=********&page=1";
+    String apiUrl = "https://content.guardianapis.com/search?api-key=" + dotenv.get("THEGUARDIAN_API_KEY") + "&page=1&show-fields=bodyText";
+    String outputFile = "./assets/the_guardian/response.json";
+    // TODO : IT'S WRITTEN BY MONKEY, FIX
+    filePath = outputFile;
 
     try {
-      response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-      //code to elaborate response
-      /*
-      * from the response take response["response"]["results"] and save only the "id" of every item in articlesId
-      *
-      *get the full article for every id
-      *
-      * save every article in articlesList
-      * */
-
-
+      String jsonResponse = callApi(apiUrl);
+      try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(outputFile))) {
+        writer.write(jsonResponse);
+      }
+      System.out.println("[INFO] - API response saved to " + outputFile);
     } catch (IOException e) {
-      e.printStackTrace();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
+      System.err.println("[INFO] - Error calling the API: " + e.getMessage());
     }
-    System.out.println(response.body());
-    //https://content.guardianapis.com/search?q=joe%20biden&api-key=****************&page=1
+  }
+
+  // TODO : JOIN WITH UPPER
+  public static String callApi(String apiUrl) throws IOException {
+    URL url = new URL(apiUrl);
+    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+    connection.setRequestMethod("GET");
+
+    StringBuilder response = new StringBuilder();
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+      String line;
+      while ((line = reader.readLine()) != null) {
+        response.append(line);
+      }
+    }
+    return response.toString();
   }
 
   public Article[] getArticles() {
