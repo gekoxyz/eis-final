@@ -1,9 +1,6 @@
 package it.unipd.dei.eis;
 
-import com.opencsv.exceptions.CsvValidationException;
-import it.unipd.dei.eis.adapters.NyTimesCsvAdapter;
 import it.unipd.dei.eis.adapters.TheGuardianJsonAdapter;
-import it.unipd.dei.eis.serialization.Deserializer;
 import it.unipd.dei.eis.serialization.Serializer;
 
 public class Main {
@@ -39,8 +36,8 @@ public class Main {
 //    serializer.serialize(theGuardianJsonAdapter.getArticles(), "articles.xml");
 
     TheGuardianJsonAdapter theGuardianJsonAdapter1 = new TheGuardianJsonAdapter();
-    theGuardianJsonAdapter1.request();
+    theGuardianJsonAdapter1.callApi();
     theGuardianJsonAdapter1.loadArticles();
-    serializer.serialize(theGuardianJsonAdapter1.getArticles(), "bellecose.xml");
+    serializer.serialize(theGuardianJsonAdapter1.getArticles(), "articles.xml");
   }
 }
