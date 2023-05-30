@@ -25,6 +25,8 @@ public class Analyzer {
 
     HashSet<String> uniqueWords = new HashSet<>();
     HashMap<String, Integer> wordCounter = new HashMap<>();
+    // TODO: STOPLIST DOESN'T FILTER ALL. ALTER THE STOPLIST OR USE SOMETHING FROM CORENLP TO AVOID THIS
+    HashSet<String> stopList = loadStopList();
 
     for (Article article : articles) {
       // annotate the body text
@@ -32,15 +34,16 @@ public class Analyzer {
       pipeline.annotate(doc);
 
       for (CoreLabel tok : doc.tokens()) {
-        // TODO : ADD IF NOT IN STOPLIST
-        uniqueWords.add(tok.word());
+        if (!stopList.contains(tok.word())) {
+          uniqueWords.add(tok.word());
+        }
       }
+
       for (String el : uniqueWords) {
         wordCounter.put(el, wordCounter.getOrDefault(el, 0) + 1);
       }
       uniqueWords.clear();
     }
-
 
     // Step 1: Get the entry set from the map
     Set<Map.Entry<String, Integer>> entrySet = wordCounter.entrySet();
@@ -49,11 +52,7 @@ public class Analyzer {
     List<Map.Entry<String, Integer>> list = new ArrayList<>(entrySet);
 
     // Step 3: Sort the list in descending order
-    Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
-      public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
-        return o2.getValue().compareTo(o1.getValue());
-      }
-    });
+    Collections.sort(list, (o1, o2) -> o2.getValue().compareTo(o1.getValue()));
 
 //    // Step 4: Iterate over the sorted list and print the key-value pairs
 //    for (Map.Entry<String, Integer> entry : list) {
@@ -73,5 +72,19 @@ public class Analyzer {
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  private static HashSet<String> loadStopList() {
+    HashSet<String> stringList = new HashSet<>();
+    try (BufferedReader reader = new BufferedReader(
+        new FileReader("./assets/coreNLP/stoplist.txt"))) {
+      String line;
+      while ((line = reader.readLine()) != null) {
+        stringList.add(line);
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return stringList;
   }
 }
