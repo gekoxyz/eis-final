@@ -1,5 +1,7 @@
 package it.unipd.dei.eis;
 
+import com.opencsv.exceptions.CsvValidationException;
+import it.unipd.dei.eis.adapters.NyTimesCsvAdapter;
 import it.unipd.dei.eis.adapters.TheGuardianJsonAdapter;
 import it.unipd.dei.eis.serialization.Serializer;
 
@@ -8,14 +10,9 @@ public class Main {
   public static void main(String[] args) {
     Serializer serializer = new Serializer();
 
-//    NyTimesCsvAdapter nyTimesCsvAdapter = new NyTimesCsvAdapter(
-//            "./assets/nytimes/nytimes_articles_v2.csv");
-//    try {
-//      nyTimesCsvAdapter.loadArticles();
-//      serializer.serialize(nyTimesCsvAdapter.getArticles(), "articles.xml");
-//    } catch (CsvValidationException e) {
-//      throw new RuntimeException(e);
-//    }
+//    NyTimesCsvAdapter nyTimesCsvAdapter = new NyTimesCsvAdapter();
+//    nyTimesCsvAdapter.loadArticles();
+//    serializer.serialize(nyTimesCsvAdapter.getArticles(), "articles.xml");
 
 //    NyTimesCsvAdapter nyTimesCsvAdapter2 = new NyTimesCsvAdapter("./assets/nytimes/temp.csv");
 //    try {
@@ -36,8 +33,8 @@ public class Main {
 //    serializer.serialize(theGuardianJsonAdapter.getArticles(), "articles.xml");
 
     TheGuardianJsonAdapter theGuardianJsonAdapter1 = new TheGuardianJsonAdapter();
-    theGuardianJsonAdapter1.callApi();
     theGuardianJsonAdapter1.loadArticles();
     serializer.serialize(theGuardianJsonAdapter1.getArticles(), "articles.xml");
+
   }
 }

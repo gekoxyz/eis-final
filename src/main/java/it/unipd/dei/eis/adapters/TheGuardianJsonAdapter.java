@@ -37,6 +37,7 @@ public class TheGuardianJsonAdapter {
   public void loadArticles() {
     ObjectMapper objectMapper = new ObjectMapper();
     File[] files = new File(folderPath).listFiles(); // Get an array of all files in the folder
+    assert files != null;
     for (File filePath : files) {
       File jsonFile = new File(filePath.toString());
       try {
@@ -46,7 +47,9 @@ public class TheGuardianJsonAdapter {
         if (resultsNode != null && resultsNode.isArray()) {
           for (JsonNode resultNode : resultsNode) {
             String webTitle = resultNode.get("webTitle").asText();
-            String bodyText = resultNode.get("fields").get("bodyText").asText();
+            // the guardian sends the & char already escaped. this is already done by xml library
+            // it would be better if the javax.xml had a way to avoid escaping the & char  but i think this is pretty painless
+            String bodyText = resultNode.get("fields").get("bodyText").asText().replace("&amp;", "&");
             articlesList.add(new Article(webTitle, bodyText));
           }
         } else {
