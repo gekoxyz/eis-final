@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 /**
  * The abstract class {@code Adapter} represents a generic adapter that loads articles from a folder
- * and provides access to them through an ArrayList.
+ * and provides access to them through an ArrayList. New sources should extend this {@code Adapter} class.
  */
 abstract class Adapter {
   /**
