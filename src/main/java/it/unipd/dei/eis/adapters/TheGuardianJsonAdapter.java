@@ -22,12 +22,12 @@ import java.nio.file.Paths;
  */
 public class TheGuardianJsonAdapter extends Adapter {
   /**
-   * folder path as specified by the superclass
+   * folder path as specified by the superclass {@code Adapter}
    */
   String folderPath = "./assets/the_guardian/";
 
   /**
-   * Loads articles from the specified folder as specified by the superclass
+   * Loads articles from the specified folder as specified by the superclass {@code Adapter}
    */
   public void loadArticles() {
     ObjectMapper objectMapper = new ObjectMapper();
@@ -99,7 +99,7 @@ public class TheGuardianJsonAdapter extends Adapter {
   }
 
   /**
-   * The default call to the API downloads just one page
+   * Default call to the API which downloads just one page
    */
   public void callApi() {
     callApi(1);
