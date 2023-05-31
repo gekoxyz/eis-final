@@ -9,19 +9,26 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-
+/**
+ * Adapter for the NyTimes csv file that has been provided us through moodle
+ */
 public class NyTimesCsvAdapter extends Adapter {
 
+  /**
+   * folder path as specified by the superclass {@code Adapter}
+   */
   private String folderPath = "./assets/nytimes/";
 
+  /**
+   * Loads articles from the specified folder as specified by the superclass {@code Adapter}
+   */
   public void loadArticles() {
-    CSVReader reader;
-    String[] nextline;
-
-    File[] files = new File(folderPath).listFiles(); // Get an array of all files in the folder
+    // Get an array of all files in the folder
+    File[] files = new File(folderPath).listFiles();
     assert files != null;
     for (File filePath : files) {
       // Open CSV with CSVReader
+      CSVReader reader;
       try {
         reader = new CSVReader(new FileReader(filePath.toString()));
       } catch (FileNotFoundException e) {
@@ -32,14 +39,15 @@ public class NyTimesCsvAdapter extends Adapter {
       try {
         // this skips the first line because it defines the fields of the csv
         reader.readNext();
-        while ((nextline = reader.readNext()) != null) {
+        String[] nextLine;
+        while ((nextLine = reader.readNext()) != null) {
           // checking that the csv has the correct number of fields
-          if (nextline.length != 7) {
+          if (nextLine.length != 7) {
             throw new CsvValidationException(
                     "[ERROR] - The file doesn't have the correct number of fields");
           }
-          String title = nextline[2];
-          String bodyText = nextline[3];
+          String title = nextLine[2];
+          String bodyText = nextLine[3];
           articlesList.add(new Article(title, bodyText));
         }
         reader.close();
