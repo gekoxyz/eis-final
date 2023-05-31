@@ -10,7 +10,6 @@ import java.io.IOException;
 
 import java.net.URL;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
@@ -19,20 +18,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 
-public class TheGuardianJsonAdapter {
+public class TheGuardianJsonAdapter extends Adapter {
 
-  private String folderPath = "./assets/the_guardian/";
-
-  ArrayList<Article> articlesList;
-
-  public TheGuardianJsonAdapter(String folderPath) {
-    this.folderPath = folderPath;
-    this.articlesList = new ArrayList<>();
-  }
-
-  public TheGuardianJsonAdapter() {
-    this.articlesList = new ArrayList<>();
-  }
+  String folderPath = "./assets/the_guardian/";
 
   public void loadArticles() {
     ObjectMapper objectMapper = new ObjectMapper();
@@ -73,7 +61,8 @@ public class TheGuardianJsonAdapter {
     try {
       for (int pageNumber = 1; pageNumber <= pages; pageNumber++) {
         // setting up request URL
-        URL url = new URL("https://content.guardianapis.com/search?api-key=" + dotenv.get("THEGUARDIAN_API_KEY") + "&page=" + pageNumber + "&show-fields=bodyText&page-size=50");
+        URL url = new URL("https://content.guardianapis.com/search?api-key=" + dotenv.get("THEGUARDIAN_API_KEY") +
+                "&page=" + pageNumber + "&show-fields=bodyText&page-size=50");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         // crafting response
@@ -101,7 +90,4 @@ public class TheGuardianJsonAdapter {
     callApi(1);
   }
 
-  public Article[] getArticles() {
-    return articlesList.toArray(new Article[0]);
-  }
 }

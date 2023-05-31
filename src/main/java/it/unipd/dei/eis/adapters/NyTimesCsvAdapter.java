@@ -1,6 +1,5 @@
 package it.unipd.dei.eis.adapters;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import it.unipd.dei.eis.Article;
@@ -9,20 +8,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 
-public class NyTimesCsvAdapter {
+
+public class NyTimesCsvAdapter extends Adapter {
 
   private String folderPath = "./assets/nytimes/";
-
-  ArrayList<Article> articlesList = new ArrayList<>();
-
-  public NyTimesCsvAdapter(String folderPath) {
-    this.folderPath = folderPath;
-  }
-
-  public NyTimesCsvAdapter() {
-  }
 
   public void loadArticles() {
     CSVReader reader;
@@ -61,7 +51,4 @@ public class NyTimesCsvAdapter {
     }
   }
 
-  public Article[] getArticles() {
-    return articlesList.toArray(new Article[0]);
-  }
 }
