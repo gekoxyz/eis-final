@@ -69,8 +69,7 @@ public class TheGuardianJsonAdapter extends Adapter {
     // The dotenv loads the private API key to make the call to The Guardian
     Dotenv dotenv = Dotenv.load();
     // The current timestamp is used as the filename
-    Instant currentTimestamp = Instant.now();
-    String filePath = folderPath + currentTimestamp + ".json";
+    String filePath = folderPath + Instant.now().getEpochSecond() + ".json";
     try {
       for (int pageNumber = 1; pageNumber <= pages; pageNumber++) {
         // setting up request URL with the API key and page number
