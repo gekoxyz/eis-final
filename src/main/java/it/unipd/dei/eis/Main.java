@@ -26,23 +26,19 @@ public class Main {
      * */
 
 
-    if(args[0].equals("-d") || args[0].equals("-da"))
-      if(args[1].equals("nytimes"))
-      {
+    if (args[0].equals("-d") || args[0].equals("-da"))
+      if (args[1].equals("nytimes")) {
         NyTimesCsvAdapter nyTimesCsvAdapter = new NyTimesCsvAdapter();
         nyTimesCsvAdapter.loadArticles();
         serializer.serialize(nyTimesCsvAdapter.getArticles(), "articles.xml");
 
 
-
         Article[] articles = deserializer.deserialize("articles.xml");
         System.out.println(articles.length + " articles in the XML file");
-        if(args[0].equals("-da")) {
+        if (args[0].equals("-da")) {
           Analyzer.main(null);
         }
-      }
-      else if(args[1].equals("theguardian"))
-      {
+      } else if (args[1].equals("theguardian")) {
         TheGuardianJsonAdapter theGuardianJsonAdapter1 = new TheGuardianJsonAdapter();
         theGuardianJsonAdapter1.loadArticles();
         serializer.serialize(theGuardianJsonAdapter1.getArticles(), "articles.xml");
@@ -50,13 +46,10 @@ public class Main {
         Article[] articles = deserializer.deserialize("articles.xml");
         System.out.println(articles.length + " articles in the XML file");
 
-        if(args[0].equals("-da")) {
+        if (args[0].equals("-da")) {
           Analyzer.main(null);
         }
-      }
-
-      else
-      {
+      } else {
         Analyzer.main(null);
       }
 
@@ -79,5 +72,7 @@ public class Main {
       }*/
 
 
+    TheGuardianJsonAdapter theGuardianJsonAdapter = new TheGuardianJsonAdapter();
+    theGuardianJsonAdapter.callApi();
   }
 }
