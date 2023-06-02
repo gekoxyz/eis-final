@@ -39,3 +39,7 @@ build/
 
 ### DOTENV ###
 .env
+
+### FILES ###
+articles.xml
+output.txt

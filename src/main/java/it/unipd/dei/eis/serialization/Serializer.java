@@ -16,14 +16,15 @@ import java.io.File;
 
 public class Serializer {
 
-  public Serializer() {
-  }
-
+  /**
+   * Serialize article data to the xml file
+   *
+   * @param articlesList the articles to serialize
+   * @param fileName     the output file name
+   */
   public void serialize(Article[] articlesList, String fileName) {
     try {
-      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-      DocumentBuilder builder = factory.newDocumentBuilder();
-      Document document = builder.newDocument();
+      Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 
       // Create the root element
       Element rootElement = document.createElement("articles");
@@ -46,14 +47,11 @@ public class Serializer {
       }
 
       // Serialize the document to XML file
-      TransformerFactory transformerFactory = TransformerFactory.newInstance();
-      Transformer transformer = transformerFactory.newTransformer();
+      Transformer transformer = TransformerFactory.newInstance().newTransformer();
       transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 
-      File xmlFile = new File(fileName);
-      StreamResult result = new StreamResult(xmlFile);
-      DOMSource source = new DOMSource(document);
-      transformer.transform(source, result);
+      StreamResult result = new StreamResult(new File(fileName));
+      transformer.transform(new DOMSource(document), result);
 
       System.out.println("[INFO] - XML file created successfully.");
     } catch (Exception e) {
@@ -62,4 +60,12 @@ public class Serializer {
     }
   }
 
+  /**
+   * Serialize article data to the xml file with the default filename articles.xml
+   *
+   * @param articlesList the articles to serialize
+   */
+  public void serialize(Article[] articlesList) {
+    serialize(articlesList, "articles.xml");
+  }
 }

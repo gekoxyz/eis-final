@@ -10,7 +10,6 @@ import java.io.IOException;
 
 import java.net.URL;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
@@ -18,22 +17,18 @@ import java.net.HttpURLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+/**
+ * Adapter for {@link <a href="https://open-platform.theguardian.com/">The Guardian API</a>}
+ */
+public class TheGuardianJsonAdapter extends Adapter {
+  /**
+   * folder path as specified by the superclass {@code Adapter}
+   */
+  String folderPath = "./assets/the_guardian/";
 
-public class TheGuardianJsonAdapter {
-
-  private String folderPath = "./assets/the_guardian/";
-
-  ArrayList<Article> articlesList;
-
-  public TheGuardianJsonAdapter(String folderPath) {
-    this.folderPath = folderPath;
-    this.articlesList = new ArrayList<>();
-  }
-
-  public TheGuardianJsonAdapter() {
-    this.articlesList = new ArrayList<>();
-  }
-
+  /**
+   * Loads articles from the specified folder as specified by the superclass {@code Adapter}
+   */
   public void loadArticles() {
     ObjectMapper objectMapper = new ObjectMapper();
     File[] files = new File(folderPath).listFiles(); // Get an array of all files in the folder
@@ -41,7 +36,7 @@ public class TheGuardianJsonAdapter {
     for (File filePath : files) {
       File jsonFile = new File(filePath.toString());
       try {
-
+        // Going into the json nodes to extract data
         JsonNode rootNode = objectMapper.readTree(jsonFile);
         JsonNode resultsNode = rootNode.get("response").get("results");
         if (resultsNode != null && resultsNode.isArray()) {
@@ -56,7 +51,6 @@ public class TheGuardianJsonAdapter {
           System.out.println("[WARNING] - Results field not found or not an array");
         }
         System.out.println("[INFO] - Scanned file: " + filePath);
-
       } catch (IOException e) {
         System.out.println("[ERROR] - Check the file name and path");
         e.printStackTrace();
@@ -65,18 +59,26 @@ public class TheGuardianJsonAdapter {
     System.out.println("[INFO] - Loaded " + articlesList.size() + " articles");
   }
 
-  //    String apiUrl = "https://content.guardianapis.com/search?api-key=********&page=1";
+  /**
+   * Calls The Guardian's API and saves the entire json response into the appropriate folder in the assets. The called endpoint is
+   * {@code https://content.guardianapis.com/search?api-key=********&page=i&show-fields=bodyText&page-size=50}
+   *
+   * @param pages the number of pages to be downloaded
+   */
   public void callApi(int pages) {
+    // The dotenv loads the private API key to make the call to The Guardian
     Dotenv dotenv = Dotenv.load();
+    // The current timestamp is used as the filename
     Instant currentTimestamp = Instant.now();
     String filePath = folderPath + currentTimestamp + ".json";
     try {
       for (int pageNumber = 1; pageNumber <= pages; pageNumber++) {
-        // setting up request URL
-        URL url = new URL("https://content.guardianapis.com/search?api-key=" + dotenv.get("THEGUARDIAN_API_KEY") + "&page=" + pageNumber + "&show-fields=bodyText&page-size=50");
+        // setting up request URL with the API key and page number
+        URL url = new URL("https://content.guardianapis.com/search?api-key=" + dotenv.get("THEGUARDIAN_API_KEY") +
+                "&page=" + pageNumber + "&show-fields=bodyText&page-size=50");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
-        // crafting response
+        // getting the actual response into a String
         StringBuilder response = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
           String line;
@@ -85,7 +87,7 @@ public class TheGuardianJsonAdapter {
           }
         }
         String jsonResponse = response.toString();
-        // writing response
+        // writing response to file
         try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(filePath))) {
           writer.write(jsonResponse);
         }
@@ -96,12 +98,11 @@ public class TheGuardianJsonAdapter {
     }
   }
 
-  // default call downloads 1 page
+  /**
+   * Default call to the API which downloads just one page
+   */
   public void callApi() {
     callApi(1);
   }
 
-  public Article[] getArticles() {
-    return articlesList.toArray(new Article[0]);
-  }
 }

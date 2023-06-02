@@ -3,6 +3,7 @@ package it.unipd.dei.eis;
 import com.opencsv.exceptions.CsvValidationException;
 import it.unipd.dei.eis.adapters.NyTimesCsvAdapter;
 import it.unipd.dei.eis.adapters.TheGuardianJsonAdapter;
+import it.unipd.dei.eis.serialization.Deserializer;
 import it.unipd.dei.eis.serialization.Serializer;
 import it.unipd.dei.eis.serialization.Deserializer;
 
@@ -76,14 +77,6 @@ public class Main {
       } catch (CsvValidationException e) {
           throw new RuntimeException(e);
       }*/
-
-
-
-      /*TheGuardianJsonAdapter theGuardianJsonAdapter = new TheGuardianJsonAdapter("./assets/the_guardian/theguardian_articles_v1_p01.json");
-      theGuardianJsonAdapter.loadArticles();
-
-      serializer.serialize(theGuardianJsonAdapter.getArticles(), "articles.xml");*/
-
 
 
   }
