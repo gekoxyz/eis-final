@@ -1,6 +1,5 @@
 package it.unipd.dei.eis;
 
-
 import it.unipd.dei.eis.adapters.NyTimesCsvAdapter;
 import it.unipd.dei.eis.serialization.Deserializer;
 import org.junit.Test;
@@ -8,8 +7,15 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+/**
+ * The {@code NyTimesCsvAdapterTest} class is a JUnit test class for the {@link NyTimesCsvAdapter} class.
+ * It contains test methods to verify the functionality of the adapter.
+ */
 public class NyTimesCsvAdapterTest {
-
+    /**
+     * Test the {@link NyTimesCsvAdapter#loadArticles()} method.
+     * It loads articles from the CSV file and verifies that the articles are correctly loaded.
+     */
     @Test
     public void testLoadArticles() {
         NyTimesCsvAdapter adapter = new NyTimesCsvAdapter(); // use test folder for csv files
@@ -19,8 +25,6 @@ public class NyTimesCsvAdapterTest {
         int numArticles = 1000; // numArticles in CSV file
         assertEquals(numArticles, articles.length); // ensure that articles in CSV file were loaded
 
-        // TODO: get every title and bodyText from CSV and compare with XML title that we have
-        // TODO: check xml format
         // deserialize local xml
         Deserializer xml_dsl = new Deserializer();
         Article[] a = xml_dsl.deserialize("./articles.xml");
@@ -34,6 +38,10 @@ public class NyTimesCsvAdapterTest {
         }
     }
 
+    /**
+     * Test the {@link NyTimesCsvAdapter#getArticles()} method.
+     * It verifies that the array of articles is correctly returned.
+     */
     @Test
     public void testGetArticles() {
         NyTimesCsvAdapter adapter = new NyTimesCsvAdapter(); // use test folder for csv files
