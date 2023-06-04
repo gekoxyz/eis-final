@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 public class XmlFieldTest {
 
     @Test
-    public void testXmlContainsTagMultipleTimes() throws Exception {
+    public void testXmlContainsTagMultipleTimes()  {
         // The XML document source file path
         String xmlFilePath = "articles.xml";
 
