@@ -56,6 +56,17 @@
             <version>2.0.5</version>
             <scope>runtime</scope>
         </dependency>
+
+
+        <!-- testing       -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.8.2</version>
+            <scope>test</scope>
+        </dependency>
+
+
         <!--dotenv -->
         <!-- it's in version 2.3.2 since we are using java 8. requires java 11 since version 3.0.0-->
         <dependency>
@@ -65,4 +76,13 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.2</version>
+            </plugin>
+        </plugins>
+    </build>
 </project>

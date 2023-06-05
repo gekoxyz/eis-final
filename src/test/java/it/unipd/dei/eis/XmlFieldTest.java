@@ -1,4 +1,4 @@
-package it.unipd.dei.eis;import org.junit.Test;
+package it.unipd.dei.eis;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
@@ -9,9 +9,16 @@ import java.io.File;
 import java.io.FileInputStream;
 
 import static org.junit.Assert.*;
+import org.junit.jupiter.api.*;
 
+/**
+ * The XmlFieldTest class is a JUnit test class that checks the occurrence of a specific tag in an XML document.
+ */
 public class XmlFieldTest {
 
+    /**
+     * Test method to check the occurrence of a specific tag in an XML document.
+     */
     @Test
     public void testXmlContainsTagMultipleTimes()  {
         // The XML document source file path
@@ -49,6 +56,13 @@ public class XmlFieldTest {
         }
     }
 
+    /**
+     * Recursively counts the occurrences of a specific tag in the XML document.
+     *
+     * @param node     The current node in the XML document
+     * @param tagName  The tag name to count occurrences for
+     * @return The number of occurrences of the tag in the XML document
+     */
     private int countTagOccurrences(Node node, String tagName) {
         int count = 0;
         if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals(tagName)) {

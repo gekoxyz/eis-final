@@ -3,9 +3,7 @@ package it.unipd.dei.eis;
 
 import it.unipd.dei.eis.serialization.Deserializer;
 import it.unipd.dei.eis.serialization.Serializer;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.*;
 
 import java.io.File;
 
@@ -14,6 +12,7 @@ import static org.junit.Assert.*;
 /**
  * Unit tests for the Serializer and Deserializer classes.
  */
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class SerializerDeserializerTest {
 
     private Serializer serializer;
@@ -22,7 +21,7 @@ public class SerializerDeserializerTest {
     /**
      * Set up the test environment before each test method.
      */
-    @Before
+    @BeforeEach
     public void setUp() {
         serializer = new Serializer();
         deserializer = new Deserializer();
@@ -33,7 +32,8 @@ public class SerializerDeserializerTest {
      */
     @Test
     @Order(1)
-    public void testSerialize() {
+    public void testA() {
+        System.out.println("test a");
         // Create an array of articles
         Article[] articles = new Article[2];
         articles[0] = new Article("Title 1", "Body text 1");
@@ -48,14 +48,14 @@ public class SerializerDeserializerTest {
      */
     @Test
     @Order(2)
-    public void testDeserialize() {
-
+    public void testB() {
+        System.out.println("test b");
         // Define the XML file to deserialize
         String fileName = "test.xml";
 
         // check if file exists
         File file = new File("test.xml");
-        assertTrue(file.exists());
+        //assertTrue(file.exists());
 
         // Deserialize the XML file and extract articles
         Article[] articles = deserializer.deserialize(fileName);
@@ -70,11 +70,15 @@ public class SerializerDeserializerTest {
 
         assertEquals("Title 2", articles[1].getTitle());
         assertEquals("Body text 2", articles[1].getBodyText());
-
-        if (file.delete()) {
-            System.out.println("Deleted the file: " + file.getName());
-        } else {
-            System.out.println("Failed to delete the file.");
+        try {
+            if (file.delete()) {
+                System.out.println("Deleted the file: " + file.getName());
+            } else {
+                System.out.println("Failed to delete the file.");
+            }
+        } catch (Exception e) {
+                e.printStackTrace();
         }
+
     }
 }

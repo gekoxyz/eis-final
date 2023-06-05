@@ -5,8 +5,7 @@ import it.unipd.dei.eis.adapters.NyTimesCsvAdapter;
 import it.unipd.dei.eis.adapters.TheGuardianJsonAdapter;
 import it.unipd.dei.eis.serialization.Deserializer;
 import it.unipd.dei.eis.serialization.Serializer;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 
 import static org.junit.Assert.*;
 /**
@@ -14,6 +13,7 @@ import static org.junit.Assert.*;
  TheGuardianJsonAdapterTest is a JUnit test class that tests the functionality of the {@link TheGuardianJsonAdapter} class.
  It includes test cases for loading articles, retrieving articles, and comparing them with serialized/deserialized articles.
  */
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TheGuardianJsonAdapterTest {
 
     private TheGuardianJsonAdapter adapter;
@@ -22,7 +22,7 @@ public class TheGuardianJsonAdapterTest {
     /**
      * Sets up the test environment by initializing the {@link TheGuardianJsonAdapter} and {@link Serializer} objects.
      */
-    @Before
+    @BeforeEach
     public void setUp() {
         serializer = new Serializer();
         adapter = new TheGuardianJsonAdapter();
@@ -33,6 +33,7 @@ public class TheGuardianJsonAdapterTest {
      * It also verifies the content of the articles by comparing their titles and body texts.
      */
     @Test
+    @Order(1)
     public void testLoadArticles() {
 
         adapter.loadArticles();
@@ -57,6 +58,7 @@ public class TheGuardianJsonAdapterTest {
      * It loads articles from the json file and verifies that the articles are correctly loaded. (Check all articles)
      */
     @Test
+    @Order(2)
     public void testAllLoadArticles() {
         adapter.loadArticles();
         // deserialize local xml
