@@ -43,7 +43,7 @@
             <version>4.5.4</version>
             <classifier>models-english</classifier>
         </dependency>
-        <!--roba che serve-->
+        <!-- Simple Logging Facade for Java (Needed by coreNLP)-->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>

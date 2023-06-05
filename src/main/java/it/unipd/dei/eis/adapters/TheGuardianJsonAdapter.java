@@ -16,6 +16,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * Adapter for {@link <a href="https://open-platform.theguardian.com/">The Guardian API</a>}
@@ -31,7 +33,11 @@ public class TheGuardianJsonAdapter extends Adapter {
    */
   public void loadArticles() {
     ObjectMapper objectMapper = new ObjectMapper();
-    File[] files = new File(folderPath).listFiles(); // Get an array of all files in the folder
+    // Get an array of all files in the folder
+    File[] files = new File(folderPath).listFiles();
+    // Sorting alphabetically so Winzzoz and Linux/OSX have the same ordering
+    Arrays.sort(files, Comparator.comparing(File::getName));
+    // load the actual articles
     assert files != null;
     for (File filePath : files) {
       File jsonFile = new File(filePath.toString());
