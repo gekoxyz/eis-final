@@ -1,6 +1,6 @@
 package it.unipd.dei.eis;
 
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -11,8 +11,14 @@ import java.io.IOException;
 
 import static org.junit.Assert.*;
 
+/**
+ * The XMLIntegrityTest class is a JUnit test class that verifies the integrity of an XML file.
+ */
 public class XMLIntegrityTest {
 
+    /**
+     * Test method to verify the integrity of an XML file.
+     */
     @Test
     public void testXMLIntegrity() {
         // Specify the path to your XML file
