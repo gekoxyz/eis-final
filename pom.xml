@@ -15,11 +15,13 @@
     </properties>
 
     <dependencies>
+        <!-- to parse CSVs -->
         <dependency>
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
             <version>5.7.1</version>
         </dependency>
+        <!-- to parse JSONs -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -49,24 +51,19 @@
             <artifactId>slf4j-api</artifactId>
             <version>2.0.7</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>2.0.5</version>
             <scope>runtime</scope>
         </dependency>
-
-
-        <!-- testing       -->
+        <!-- Junit to test the code -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>5.8.2</version>
             <scope>test</scope>
         </dependency>
-
-
         <!--dotenv -->
         <!-- it's in version 2.3.2 since we are using java 8. requires java 11 since version 3.0.0-->
         <dependency>

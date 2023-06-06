@@ -26,6 +26,7 @@ public class Analyzer {
     HashSet<String> uniqueWords = new HashSet<>();
     HashMap<String, Integer> wordCounter = new HashMap<>();
     // TODO: STOPLIST DOESN'T FILTER ALL. ALTER THE STOPLIST OR USE SOMETHING FROM CORENLP TO AVOID THIS
+    // TODO: se pareggio in termine di peso si da preferenza in base all'ordine alfabetico
     HashSet<String> stopList = loadStopList();
 
     for (Article article : articles) {
@@ -77,7 +78,7 @@ public class Analyzer {
   private static HashSet<String> loadStopList() {
     HashSet<String> stringList = new HashSet<>();
     try (BufferedReader reader = new BufferedReader(
-        new FileReader("./assets/coreNLP/stoplist.txt"))) {
+            new FileReader("./assets/coreNLP/stoplist.txt"))) {
       String line;
       while ((line = reader.readLine()) != null) {
         stringList.add(line);
