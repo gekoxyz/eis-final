@@ -5,7 +5,6 @@ import it.unipd.dei.eis.adapters.TheGuardianJsonAdapter;
 import it.unipd.dei.eis.serialization.Deserializer;
 import it.unipd.dei.eis.serialization.Serializer;
 
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -17,14 +16,14 @@ import java.io.IOException;
  * Usage:
  * <p>
  * To Download articles use the following syntax:
- * java eis-final -d [source] [query|optional]</p>
+ * java eis-final -d [source]</p>
  *<p>
  * To Download and Analyze articles use the following syntax:
- * java eis-final -da [source] [query|optional]
+ * java eis-final -da [source]
  *</p>
  * <p>
  * To Analyze articles use the following syntax:
- * java eis-final
+ * java eis-final -a
  *</p>
  *
  * <p>Sources:
@@ -37,7 +36,7 @@ import java.io.IOException;
  *
  *<p>
  * To add a source to the program:
- * -Create an Adapter in the "src/main/java/it.unipd.dei.eis/adapters folder"
+ * -Create a custom adapter in the "src/main/java/it.unipd.dei.eis/adapters folder and extend the Adapter class"
  * -Add a case to the switch case in the main with the custom source name (e.g. case "new-source": [adapter-code];break;)
  * </p>
  */
@@ -46,16 +45,7 @@ public class Main {
   public static void main(String[] args) throws IOException {
     Serializer serializer = new Serializer();
     Deserializer deserializer = new Deserializer();
-
-    //File yourFile = new File("articles.xml");
-    //yourFile.createNewFile(); // if file already exists will do nothing
-
-    //serializer.createFile("articles.xml");
-
-    Article[] articles = deserializer.deserialize("articles.xml");
-
-
-
+    Article[] articles;
 
     if (args[0].equals("-d") || args[0].equals("-da")) {
       switch(args[1]){
@@ -64,27 +54,30 @@ public class Main {
           nyTimesCsvAdapter.loadArticles();
           serializer.serialize(nyTimesCsvAdapter.getArticles(), "articles.xml");
 
+          articles = deserializer.deserialize("articles.xml");
           System.out.println(articles.length + " articles in the XML file");
           if (args[0].equals("-da")) {
             Analyzer.main(null);
           }
           break;
 
-        case "theguardianapi":
+        case "theguardianlocal":
           TheGuardianJsonAdapter theGuardianJsonAdapter1 = new TheGuardianJsonAdapter();
           theGuardianJsonAdapter1.loadArticles();
           serializer.serialize(theGuardianJsonAdapter1.getArticles(), "articles.xml");
 
+          articles = deserializer.deserialize("articles.xml");
           System.out.println(articles.length + " articles in the XML file");
           if (args[0].equals("-da")) {
             Analyzer.main(null);
           }
           break;
-        case "local":
+        case "theguardianapi":
           TheGuardianJsonAdapter theGuardianJsonAdapter2 = new TheGuardianJsonAdapter();
           theGuardianJsonAdapter2.callApi();
           serializer.serialize(theGuardianJsonAdapter2.getArticles(), "articles.xml");
 
+          articles = deserializer.deserialize("articles.xml");
           System.out.println(articles.length + " articles in the XML file");
           if (args[0].equals("-da")) {
             Analyzer.main(null);
