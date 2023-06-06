@@ -10,7 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 /**
- * Adapter for the NyTimes csv file that has been provided us through moodle
+ * Adapter for the NyTimes csv file that has been provided through moodle
  */
 public class NyTimesCsvAdapter extends Adapter {
 
