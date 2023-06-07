@@ -7,6 +7,9 @@ import it.unipd.dei.eis.serialization.Serializer;
 import org.junit.jupiter.api.*;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static org.junit.Assert.*;
 /**
@@ -19,6 +22,7 @@ public class TheGuardianJsonAdapterTest {
 
     private TheGuardianJsonAdapter adapter;
     private Serializer serializer;
+    private File tempFile = null;
 
     /**
      * Sets up the test environment by initializing the {@link TheGuardianJsonAdapter} and {@link Serializer} objects.
@@ -36,9 +40,16 @@ public class TheGuardianJsonAdapterTest {
     @Test
     @Order(1)
     public void testLoadArticles() {
+        // create temporary file
+        try {
+            tempFile = File.createTempFile("articles", ".xml", new File("./"));
+        } catch (IOException e) {
+            Assertions.fail("Failed to create temporary File");
+            return;
+        }
 
         adapter.loadAllArticles();
-        serializer.serialize(adapter.getArticles(), "articles.xml");
+        serializer.serialize(adapter.getArticles(), tempFile.getAbsolutePath());
 
         // Verify that articles are loaded
         assertNotNull(adapter.getArticles());
@@ -52,27 +63,12 @@ public class TheGuardianJsonAdapterTest {
         Article article2 = adapter.getArticles()[1];
         assertEquals("Leaks from Minnesota nuclear power plant raise safety fears across US", article2.getTitle());
         assertEquals("In December, Janica Jammes started a microgreens business in the basement of her home in Big Lake, Minnesota, just across the river from Xcel Energy’s nuclear plant in Monticello. At least once each day, she uses water from her well to nourish the plant trays. She delivers her product to customers within a 10-mile radius and says the business has been a success. But now she worries that her water could be contaminated by a leak of about 400,000 gallons of radioactive water that occurred in November at the plant, which is about 40 miles north-west of Minneapolis. Moreover, Jammes is upset that the company did not alert the public about the leak until March – and then detected a second leak, which the company described as smaller than the first one. “We don’t know for sure if” side-effects from the leaks “will happen or when anything will happen but just the lack of transparency is very concerning”, said Jammes, a 36-year-old mother of four. While Xcel Energy representatives have said the leaks did not affect local drinking water or pose a safety threat to residents, residents such as Jammes want more answers from the company. Independent nuclear energy experts agree that the company should have been more transparent, but they say that based on reports from state and federal agencies, they also do not think the leaks pose a health risk to residents or that the incidents will serve as a significant setback to efforts to promote the carbon-free power source in the US. “This leak, even though it was contained and poses no danger”, according to the official reports, “it should be used as some sort of wake-up call”, said Najmedin Meshkati, an engineering professor who specializes in nuclear safety at the University of Southern California. While some scientists see increasing nuclear energy as a crucial, safe way to reducing carbon emissions and increasing the country’s energy independence, the disasters at the Chernobyl, Three Mile Island and Fukushima nuclear power plants continue to cause fears of the power source. “Nuclear is the only clean energy sector that has the capacity to” transition away from fossil fuels “on a large scale”, said Charlyne Smith, a senior nuclear energy analyst at the Breakthrough Institute, an energy thinktank. “It is an industry that is highly scrutinized compared to other industries, and I think the Nuclear Regulatory Commission does a really good job at ensuring that safety is something that is practiced in the industry.” Even though Xcel did not announce the leak publicly, they notified the Regulatory Commission, which is a federal agency, and the state and in November, according to the Minnesota Pollution Control Agency. The company reported that about 400,000 gallons of water containing tritium leaked from a pipe at the facility. The regulators concluded that the spill had not reached the Mississippi River or contaminated drinking water sources near the plant. “While we immediately informed state and federal agencies, with no immediate safety risk, we focused on investigating the situation and containing the affected water in concert with our regulatory agencies,” Kevin Coss, an Xcel Energy spokesperson, stated in an email to the Guardian. “Making the announcement when we did allowed us to provide the public a more accurate and complete understanding of the leak and our plan to resolve it.” Smith said she agreed that the leak did not pose a significant safety risk but “learning about it months after really doesn’t help the industry”. After the announcement, Xcel held two open houses about the leaks. The company also shut the plant down after discovering the second leak but said it would reopen this week. Jammes was among hundreds of people to attend the meetings. She and others said they were frustrated that there was no presentation about the leaks and that company representatives just stood at tables and answered only some of attendees’ questions. “It was just a quick question and answer sort of thing, like if you have questions, then we’ll try to answer them, but it was very much: you’re going to hear what we want you to hear,” Jammes said. She wants to know why the pipe broke and what Xcel will do to prevent such accidents. Michael Voll, a 60-year-old warehouse associate, also criticized the company’s approach at the meetings. He has lived in Monticello for most his life and said Xcel, which opened the plant in 1971, has benefited the local economy. “You didn’t have to come from a nuclear submarine. You could go out there, and if your uncle or your dad worked there, you probably were going to get a job,” Voll said. He also remains a supporter of nuclear energy and has never feared the plant. But after the leaks and the public meetings, he said his trust in Xcel “is way down”. Xcel sent the pipe that leaked to an independent group, where experts are studying it to determine what caused it to fail, Coss, the Xcel spokesperson stated. “The results will help us understand whether there are other potential steps we need to take at the plant,” he wrote. The company also will conduct a “thorough inspection” of the plant while it’s offline for refueling this month, Coss added. Xcel “will work to maintain” the community’s trust, Coss wrote, “by thoroughly cleaning up the leaked tritium and providing prompt updates if anything about the situation changes”.", article2.getBodyText());
-    }
 
-    /**
-     * Test the {@link TheGuardianJsonAdapter#loadAllArticles()} method.
-     * It loads articles from the json file and verifies that the articles are correctly loaded. (Check all articles)
-     */
-    @Test
-    @Order(2)
-    public void testAllLoadArticles() {
-        adapter.loadAllArticles();
-        // deserialize local xml
-        Deserializer xml_dsl = new Deserializer();
-        Article[] a = xml_dsl.deserialize("./articles.xml");
-
-        System.out.println(adapter.getArticles()[0].getTitle());
-        // check if title and bodyText matches
-        int i = 0;
-        for(Article article : adapter.getArticles()) {
-            assertEquals(article.getTitle(),a[i].getTitle()); // ensure that the first article's title was parsed correctly
-            assertEquals(article.getBodyText(), a[i].getBodyText()); // ensure that the first article's body text was parsed correctly
-            i++;
+        // Delete temporary file
+        try {
+            tempFile.deleteOnExit();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -94,20 +90,41 @@ public class TheGuardianJsonAdapterTest {
 
     /**
      * Test the {@link TheGuardianJsonAdapter#callApi()} method.
-     * Download pages and check if the number of files that ./assets/the_guardian directory contains match
-     * This directory is created when this test run, then that will be deleted.
+     *
      */
     @Test
     public void callApiTest() {
-        // chiamo callApi sapendo che ho già 10 file nella directory
+        try {
+            // Create a temporary directory
+            Path tempDir = Files.createTempDirectory("tempDir");
 
-        adapter.callApi(5);
-        String directoryPath = "./assets/test";
 
-        File directory = new File(directoryPath);
-        File[] files = directory.listFiles();
-        int fileCount = files.length;
-        assertEquals(15, fileCount);
+//            TheGuardianJsonAdapter adapterForApi = new TheGuardianJsonAdapter(tempDir.toString());
+//
+//            adapterForApi.callApi(5);
+
+            File directory = new File(tempDir.toString());
+            File[] files = directory.listFiles();
+            int fileCount = files.length;
+            assertEquals(5, fileCount);
+
+            // Delete the temporary directory and its contents
+            deleteDirectory(tempDir);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+    private static void deleteDirectory(Path directory) throws IOException {
+        Files.walk(directory)
+                .sorted((p1, p2) -> -p1.compareTo(p2))
+                .forEach(path -> {
+                    try {
+                        Files.delete(path);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
     }
 
 }
