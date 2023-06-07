@@ -46,13 +46,8 @@ import java.time.format.DateTimeFormatter;
 public class Main {
 
   public static void main(String[] args) {
-    LocalDateTime now = LocalDateTime.now();
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss_SSS");
-    String formattedDateTime = now.format(formatter);
-    System.out.println(formattedDateTime);
-//    System.out.println(Instant.now());
-//    InteractiveMenu interactiveMenu = new InteractiveMenu();
-//    interactiveMenu.runMenu();
+    InteractiveMenu interactiveMenu = new InteractiveMenu();
+    interactiveMenu.runMenu();
   }
 
 //  public static void main(String[] args) throws IOException {

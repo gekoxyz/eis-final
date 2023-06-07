@@ -81,7 +81,7 @@ public class Analyzer {
   private static HashSet<String> loadStopList() {
     HashSet<String> stringList = new HashSet<>();
     try (BufferedReader reader = new BufferedReader(
-            new FileReader("./assets/coreNLP/stoplist.txt"))) {
+            new FileReader("./resources/coreNLP/stoplist.txt"))) {
       String line;
       while ((line = reader.readLine()) != null) {
         stringList.add(line);
