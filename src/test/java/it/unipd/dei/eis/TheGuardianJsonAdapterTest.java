@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static org.junit.Assert.*;
 /**
@@ -96,20 +97,23 @@ public class TheGuardianJsonAdapterTest {
     public void callApiTest() {
         try {
             // Create a temporary directory
-            Path tempDir = Files.createTempDirectory("tempDir");
+            Path path = Paths.get("./tempDir");
+            Files.createDirectories(path);
 
+            //TODO: la directory la crea in un percorso esterno al progetto, fare in modo che il percorso sia il root del progetto
 
-//            TheGuardianJsonAdapter adapterForApi = new TheGuardianJsonAdapter(tempDir.toString());
-//
-//            adapterForApi.callApi(5);
+            TheGuardianJsonAdapter adapterForApi = new TheGuardianJsonAdapter("./tempDir/");
 
-            File directory = new File(tempDir.toString());
+            adapterForApi.callApi(5);
+
+            File directory = new File("tempDir");
             File[] files = directory.listFiles();
             int fileCount = files.length;
             assertEquals(5, fileCount);
 
             // Delete the temporary directory and its contents
-            deleteDirectory(tempDir);
+            Path p = Paths.get("./tempDir");
+            deleteDirectory(p);
         } catch (IOException e) {
             e.printStackTrace();
         }

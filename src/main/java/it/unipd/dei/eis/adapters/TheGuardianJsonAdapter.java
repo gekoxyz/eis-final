@@ -36,6 +36,7 @@ public class TheGuardianJsonAdapter extends Adapter {
 
   public TheGuardianJsonAdapter(String folderPath) {
     super();
+   this.folderPath = folderPath;
   }
 
   /**
