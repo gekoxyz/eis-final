@@ -12,6 +12,9 @@ l'array di Article possiamo gestirlo come vogliamo, e quindi può essere passato
 serializzato in xml, oppure all'```Analyzer``` per essere analizzato.
 
 ## Come installare ed eseguire il software
+- Creare nella directory principale del progetto un file denominato .env
+- Inserire all'interno del file la propria key API di The Guardian THEGUARDIAN_API_KEY=la-vostra-chiave
+- Aprire la directory principale del progetto e digitare mvn install 
 
 ## Librerie utilizzate
 
