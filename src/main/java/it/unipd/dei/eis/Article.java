@@ -1,13 +1,25 @@
 package it.unipd.dei.eis;
 
 /**
- * An Article class contains all the most important information of an article
+ * Class that contains the most essential information about an article
  */
 public class Article {
 
+  /**
+   * Title of the article
+   */
   private String title;
+  /**
+   * Body of the article
+   */
   private String bodyText;
 
+  /**
+   * Creates a basic Article
+   *
+   * @param title Title of the article
+   * @param bodyText Body of the article
+   */
   public Article(String title, String bodyText) {
     this.title = title;
     this.bodyText = bodyText;

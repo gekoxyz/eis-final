@@ -41,5 +41,5 @@ build/
 .env
 
 ### FILES ###
-articles.xml
 output.txt
+/articles.xml

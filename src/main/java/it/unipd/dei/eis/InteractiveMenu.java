@@ -5,6 +5,9 @@ import it.unipd.dei.eis.serialization.Serializer;
 
 import java.util.Scanner;
 
+/**
+ * Graphic menu for the command line
+ */
 public class InteractiveMenu {
   private Scanner scanner;
 
