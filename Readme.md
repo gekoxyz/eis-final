@@ -1,21 +1,28 @@
-# EIS-FINAL
+# Progetto Finale EIS
 
 ---
 
-## Panoramica (come abbiamo implementato le funzionalità richieste)
+## Panoramica (implementazione dele funzionalità)
 
-Nel nostro programma un generico articolo di giornale, in qualsiasi formato sia salvato, passa tramite un ```Adapter```,
-il cui compito è quello di convertire (o adattare) dal formato in cui è salvato l'articolo (JSON, CSV...) alla
-classe ```Article``` che abbiamo appositamente creato. La classe ```Adapter``` è una classe astratta e quindi definisce
-i metodi che un adapter generico deve avere per riuscire ad adattare gli articoli. Una volta che abbiamo ottenuto
-l'array di Article possiamo gestirlo come vogliamo, e quindi può essere passato al ```Serializer``` per essere
-serializzato in xml, oppure all'```Analyzer``` per essere analizzato.
+Il programma prende un generico articolo di giornale da una delle sorgenti disponibili e lo fa passare tramite un ```Adapter```,
+il cui compito è quello di convertire dal formato originale (JSON, CSV...) ad un oggetto ```Article```. La classe ```Adapter```
+è astratta e ciò permette di aggiungere nuovi Adapter personalizzati relativi a nuove sorgenti. Una volta ottenuto,
+l'array di ```Article``` può essere passato al ```Serializer``` per essere
+serializzato in xml oppure all'```Analyzer``` per essere analizzato.
 
-## Come installare ed eseguire il software
+## Come installare il software
+- Scaricare il programma
 - Registrare una key per l'API di The Guardian all'indirizzo https://open-platform.theguardian.com/access/
 - Nella directory principale del progetto, creare un file denominato ".env"
 - Inserire all'interno del file .env la propria API key di The Guardian con la sintassi seguente: THEGUARDIAN_API_KEY=la-vostra-chiave
-- Con il terminale aprire la directory principale del progetto e digitare il comando "mvn install" 
+- Con il terminale aprire la directory principale del progetto e digitare il comando "mvn install"
+- ## ROBA MANCANTE 
+
+## Eseguire il software
+Per eseguire il software aprire un terminale nella directory principale del programma e utilizzare:
+```
+comandi per eseguire
+ ```
 
 ## Librerie utilizzate
 
