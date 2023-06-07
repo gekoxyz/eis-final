@@ -1,5 +1,6 @@
 package it.unipd.dei.eis;
 
+import it.unipd.dei.eis.adapters.NyTimesCsvAdapter;
 import it.unipd.dei.eis.adapters.TheGuardianJsonAdapter;
 import it.unipd.dei.eis.serialization.Serializer;
 
@@ -80,24 +81,23 @@ public class InteractiveMenu {
     int choice;
     int i;
     do {
-      System.out.println("From which source do you want to serialize?");
+      System.out.println("From which source do you want to select?");
       i = 0;
       for (File folder : folderList) {
         System.out.println((++i) + ". " + folder.getName());
       }
+      System.out.println((++i) + ". Serialize the selected files");
       System.out.println((++i) + ". Go back");
       // get choice
       choice = readChoice();
       if (choice == i) return;
+      if (choice == i - 1) {
+        Serializer serializer = new Serializer();
+//        serializer.serialize();
+      }
     } while (choice - 1 <= 0 || choice - 1 >= folderList.length);
     int selectedFolderIndex = choice - 1;
     System.out.println("You selected the folder: " + folderList[selectedFolderIndex].getName());
-
-    if (folderList[selectedFolderIndex].getName() == "the_guardian") {
-      // instantiate the guardian adapter
-    } else if (folderList[selectedFolderIndex].getName() == "nytimes") {
-      // instantiate nytimes adapter
-    }
 
     // Get an array of all files in the folder
     File[] fileNames = new File(folderList[selectedFolderIndex].toString()).listFiles();
@@ -110,6 +110,15 @@ public class InteractiveMenu {
     }
 
     Serializer serializer = new Serializer();
+    TheGuardianJsonAdapter theGuardianJsonAdapter = new TheGuardianJsonAdapter();
+    NyTimesCsvAdapter nyTimesCsvAdapter = new NyTimesCsvAdapter();
+
+    if (folderList[selectedFolderIndex].getName().equals("the_guardian")) {
+      theGuardianJsonAdapter.loadArticlesFromList(selectedFiles);
+    } else if (folderList[selectedFolderIndex].getName().equals("nytimes")) {
+      nyTimesCsvAdapter.loadArticlesFromList(selectedFiles);
+    }
+
   }
 
   private void analyzeArticles() {
@@ -126,15 +135,13 @@ public class InteractiveMenu {
       for (File fileName : fileNames) {
         System.out.println((++i) + ". " + fileName.getName());
       }
-      System.out.println((++i) + ". Stop selecting and serialize the selected files");
+      System.out.println((++i) + ". Go back");
       // get choice
       choice = readChoice();
       // add selected file to a set of files if in range
       if (choice - 1 >= 0 && choice - 1 < fileNames.length) {
         selectedFiles.add(fileNames[choice - 1]);
-      } else if (choice == fileNames.length) {
-        System.out.println("Serializing...");
-      } else {
+      } else if (choice > fileNames.length) {
         System.out.println("The file is not in range!");
       }
     } while (choice != i);
