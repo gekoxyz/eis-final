@@ -30,6 +30,14 @@ public class TheGuardianJsonAdapter extends Adapter {
    */
   String folderPath = "./assets/the_guardian/";
 
+  public TheGuardianJsonAdapter() {
+    super();
+  }
+
+  public TheGuardianJsonAdapter(String folderPath) {
+    super();
+  }
+
   /**
    * Loads articles from the specified folder as specified by the superclass {@code Adapter}
    */
