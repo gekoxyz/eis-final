@@ -7,9 +7,18 @@ import it.unipd.dei.eis.serialization.Deserializer;
 import java.io.*;
 import java.util.*;
 
+/**
+ * The Analyzer class contains the functions that analyze terms in articles.
+ * The Analysys's result is saved in an "output.txt" file*/
 public class Analyzer {
+  /**
+   * Pipeline from the CoreNLP library used to scan terms in Articles
+   */
   private StanfordCoreNLP pipeline;
 
+  /**
+   * Initializes the analyzer CoreNLP pipeline
+   */
   public Analyzer() {
     // set up pipeline properties
     Properties props = new Properties();
@@ -20,6 +29,9 @@ public class Analyzer {
     pipeline = new StanfordCoreNLP(props);
   }
 
+  /**
+   * Main analysis function
+   */
   public void analyze() {
     Deserializer deserializer = new Deserializer();
     Article[] articles = deserializer.deserialize("articles.xml");
@@ -78,6 +90,10 @@ public class Analyzer {
     }
   }
 
+  /**
+   * Function that loads the StopList
+   * @return the loaded StopList
+   */
   private static HashSet<String> loadStopList() {
     HashSet<String> stringList = new HashSet<>();
     try (BufferedReader reader = new BufferedReader(
