@@ -7,6 +7,8 @@ import it.unipd.dei.eis.serialization.Deserializer;
 import it.unipd.dei.eis.serialization.Serializer;
 import org.junit.jupiter.api.*;
 
+import java.io.File;
+
 import static org.junit.Assert.*;
 /**
 
@@ -76,7 +78,7 @@ public class TheGuardianJsonAdapterTest {
     }
 
     /**
-     * Test the {@link NyTimesCsvAdapter#getArticles()} method.
+     * Test the {@link TheGuardianJsonAdapter#getArticles()} method.
      * It verifies that the array of articles is correctly returned.
      */
     @Test
@@ -89,6 +91,24 @@ public class TheGuardianJsonAdapterTest {
         articles = adapter.getArticles();
         assertNotNull(articles); // ensure that the array of articles is not null
         assertTrue(articles.length > 0); // ensure that the array of articles is not empty after loadArticles has been called
+    }
+
+    /**
+     * Test the {@link TheGuardianJsonAdapter#callApi()} method.
+     * Download pages and check if the number of files that ./assets/the_guardian directory contains match
+     * This directory is created when this test run, then that will be deleted.
+     */
+    @Test
+    public void callApiTest() {
+        // chiamo callApi sapendo che ho già 10 file nella directory
+
+        adapter.callApi(5);
+        String directoryPath = "./assets/test";
+
+        File directory = new File(directoryPath);
+        File[] files = directory.listFiles();
+        int fileCount = files.length;
+        assertEquals(15, fileCount);
     }
 
 }
