@@ -12,15 +12,17 @@ l'array di Article possiamo gestirlo come vogliamo, e quindi può essere passato
 serializzato in xml, oppure all'```Analyzer``` per essere analizzato.
 
 ## Come installare ed eseguire il software
-- Creare nella directory principale del progetto un file denominato .env
-- Inserire all'interno del file la propria key API di The Guardian THEGUARDIAN_API_KEY=la-vostra-chiave
-- Aprire la directory principale del progetto e digitare mvn install 
+- Registrare una key per l'API di The Guardian all'indirizzo https://open-platform.theguardian.com/access/
+- Nella directory principale del progetto, creare un file denominato ".env"
+- Inserire all'interno del file .env la propria API key di The Guardian con la sintassi seguente: THEGUARDIAN_API_KEY=la-vostra-chiave
+- Con il terminale aprire la directory principale del progetto e digitare il comando "mvn install" 
 
 ## Librerie utilizzate
 
 Come si può leggere dal ```pom.xml``` sono state utilizzate le seguenti librerie:
 
-OpenCsv per l'adapter degli articoli del New York Times, per facilitare il parsing dei file CSV
+### OpenCsv 
+Utilizzato per il parsing dei file CSV nell'adapter degli articoli del New York Times
 
 ```
 <dependency>
@@ -30,7 +32,8 @@ OpenCsv per l'adapter degli articoli del New York Times, per facilitare il parsi
 </dependency>
 ```
 
-Jackson per l'adapter degli articoli di The Guardian, per facilitare il parsing dei file JSON
+### Jackson
+Utilizzato per il parsing dei file JSON nell'adapter degli articoli di The Guardian 
 
 ```
 <dependency>
@@ -40,8 +43,9 @@ Jackson per l'adapter degli articoli di The Guardian, per facilitare il parsing 
 </dependency>
 ```
 
-CoreNLP per tokenizzare gli articoli (Guardando nel pom ci sono anche altre dipendenze necessarie legata a questa ma
-questa è la principale)
+### CoreNLP 
+Per tokenizzare gli articoli (Guardando nel pom ci sono anche altre dipendenze necessarie legata a questa ma
+CoreNLP è la principale)
 
 ```
 <dependency>
@@ -51,7 +55,8 @@ questa è la principale)
 </dependency>
 ```
 
-JUnit per testare il codice
+### JUnit 
+Per testare il codice
 
 ```
 <dependency>
@@ -62,7 +67,8 @@ JUnit per testare il codice
 </dependency>
 ```
 
-DotEnv per caricare la key di The Guardian nelle variabili d'ambiente
+### DotEnv 
+Per caricare la key di The Guardian nelle variabili d'ambiente
 
 ```
 <dependency>
