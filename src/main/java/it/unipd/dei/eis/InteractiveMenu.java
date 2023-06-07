@@ -3,7 +3,8 @@ package it.unipd.dei.eis;
 import it.unipd.dei.eis.adapters.TheGuardianJsonAdapter;
 import it.unipd.dei.eis.serialization.Serializer;
 
-import java.util.Scanner;
+import java.io.File;
+import java.util.*;
 
 /**
  * Graphic menu for the command line
@@ -77,15 +78,87 @@ public class InteractiveMenu {
   }
 
   private void serializeArticlesToXml() {
+    File[] folderList = getAllFoldersInPath("./assets/");
+    // Select folder to serialize from
+    int choice;
+    int i;
+    do {
+      System.out.println("From which source do you want to serialize?");
+      i = 0;
+      for (File folder : folderList) {
+        System.out.println((++i) + ". " + folder.getName());
+      }
+      System.out.println((++i) + ". Go back");
+      // get choice
+      choice = readChoice();
+      if (choice == i) return;
+    } while (choice - 1 <= 0 || choice - 1 >= folderList.length);
+    int selectedFolderIndex = choice - 1;
+    System.out.println("You selected the folder: " + folderList[selectedFolderIndex].getName());
+
+    if (folderList[selectedFolderIndex].getName() == "the_guardian") {
+      // instantiate the guardian adapter
+    } else if (folderList[selectedFolderIndex].getName() == "nytimes") {
+      // instantiate nytimes adapter
+    }
+
+    // Get an array of all files in the folder
+    File[] fileNames = new File(folderList[selectedFolderIndex].toString()).listFiles();
+    // Sorting alphabetically so Winzzoz and Linux/OSX have the same ordering
+    Arrays.sort(fileNames, Comparator.comparing(File::getName));
+    // Get the files to serialize
+    File[] selectedFiles = getFilesToSerialize(fileNames);
+    for (File f : selectedFiles) {
+      System.out.println(f.getName());
+    }
+
     Serializer serializer = new Serializer();
-    System.out.println("From which source do you want to serialize?");
-    // TODO: CREATE MENU FOR THIS
-    // THE GUARDIAN
-    // NYTIMES
-    // ALL POSSIBLE
   }
 
   private void analyzeArticles() {
-    // TODO: FROM WHAT DO I ANALYZE?
+    // TODO: CHOOSE FILES TO ANALYZE
   }
+
+  private File[] getFilesToSerialize(File[] fileNames) {
+    Set<File> selectedFiles = new HashSet<>();
+    int choice;
+    int i;
+    do {
+      System.out.println("What file/s do you want to serialize?");
+      i = 0;
+      for (File fileName : fileNames) {
+        System.out.println((++i) + ". " + fileName.getName());
+      }
+      System.out.println((++i) + ". Stop selecting and serialize the selected files");
+      // get choice
+      choice = readChoice();
+      // add selected file to a set of files if in range
+      if (choice - 1 >= 0 && choice - 1 < fileNames.length) {
+        selectedFiles.add(fileNames[choice - 1]);
+      } else if (choice == fileNames.length) {
+        System.out.println("Serializing...");
+      } else {
+        System.out.println("The file is not in range!");
+      }
+    } while (choice != i);
+    return selectedFiles.toArray(new File[0]);
+  }
+
+  private File[] getAllFoldersInPath(String folderPath) {
+    ArrayList<File> folders = new ArrayList<>();
+    File folder = new File(folderPath);
+
+    if (folder.exists() && folder.isDirectory()) {
+      File[] subfolders = folder.listFiles(File::isDirectory);
+
+      if (subfolders != null) {
+        for (File subfolder : subfolders) {
+          folders.add(subfolder);
+        }
+      }
+    }
+    Collections.sort(folders);
+    return folders.toArray(new File[0]);
+  }
+
 }

@@ -2,6 +2,7 @@ package it.unipd.dei.eis.adapters;
 
 import it.unipd.dei.eis.Article;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -36,9 +37,16 @@ abstract class Adapter {
   }
 
   /**
-   * Loads the articles from the specified folder path to the {@code articlesList}
+   * Loads all the articles from the adapter folder to the {@code articlesList}
    */
-  public abstract void loadArticles();
+  public abstract void loadAllArticles();
+
+  /**
+   * Loads a list of articles from the adapter folder to the articlesList
+   *
+   * @param files
+   */
+  public abstract void loadArticlesFromList(File[] files);
 
   /**
    * Returns the articles loaded by the adapter
