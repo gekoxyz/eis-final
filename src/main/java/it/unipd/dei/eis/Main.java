@@ -6,10 +6,13 @@ import it.unipd.dei.eis.serialization.Deserializer;
 import it.unipd.dei.eis.serialization.Serializer;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Main for the Article Downloader
- * */
+ */
 
 
 /**
@@ -17,14 +20,14 @@ import java.io.IOException;
  * <p>
  * To Download articles use the following syntax:
  * java eis-final -d [source]</p>
- *<p>
+ * <p>
  * To Download and Analyze articles use the following syntax:
  * java eis-final -da [source]
- *</p>
+ * </p>
  * <p>
  * To Analyze articles use the following syntax:
  * java eis-final -a
- *</p>
+ * </p>
  *
  * <p>Sources:
  * -nytimes
@@ -34,7 +37,7 @@ import java.io.IOException;
  *
  *
  *
- *<p>
+ * <p>
  * To add a source to the program:
  * -Create a custom adapter in the "src/main/java/it.unipd.dei.eis/adapters folder and extend the Adapter class"
  * -Add a case to the switch case in the main with the custom source name (e.g. case "new-source": [adapter-code];break;)
@@ -42,52 +45,62 @@ import java.io.IOException;
  */
 public class Main {
 
-  public static void main(String[] args) throws IOException {
-    Serializer serializer = new Serializer();
-    Deserializer deserializer = new Deserializer();
-    Article[] articles;
-
-    if (args[0].equals("-d") || args[0].equals("-da")) {
-      switch(args[1]){
-        case "nytimes":
-          NyTimesCsvAdapter nyTimesCsvAdapter = new NyTimesCsvAdapter();
-          nyTimesCsvAdapter.loadArticles();
-          serializer.serialize(nyTimesCsvAdapter.getArticles(), "articles.xml");
-
-          articles = deserializer.deserialize("articles.xml");
-          System.out.println(articles.length + " articles in the XML file");
-          if (args[0].equals("-da")) {
-            Analyzer.main(null);
-          }
-          break;
-
-        case "theguardianlocal":
-          TheGuardianJsonAdapter theGuardianJsonAdapter1 = new TheGuardianJsonAdapter();
-          theGuardianJsonAdapter1.loadArticles();
-          serializer.serialize(theGuardianJsonAdapter1.getArticles(), "articles.xml");
-
-          articles = deserializer.deserialize("articles.xml");
-          System.out.println(articles.length + " articles in the XML file");
-          if (args[0].equals("-da")) {
-            Analyzer.main(null);
-          }
-          break;
-        case "theguardianapi":
-          TheGuardianJsonAdapter theGuardianJsonAdapter2 = new TheGuardianJsonAdapter();
-          theGuardianJsonAdapter2.callApi();
-          serializer.serialize(theGuardianJsonAdapter2.getArticles(), "articles.xml");
-
-          articles = deserializer.deserialize("articles.xml");
-          System.out.println(articles.length + " articles in the XML file");
-          if (args[0].equals("-da")) {
-            Analyzer.main(null);
-          }
-          break;
-      }
-    }
-    else
-    {
-      Analyzer.main(null);
-    }
+  public static void main(String[] args) {
+    LocalDateTime now = LocalDateTime.now();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss_SSS");
+    String formattedDateTime = now.format(formatter);
+    System.out.println(formattedDateTime);
+//    System.out.println(Instant.now());
+//    InteractiveMenu interactiveMenu = new InteractiveMenu();
+//    interactiveMenu.runMenu();
   }
+
+//  public static void main(String[] args) throws IOException {
+//    Serializer serializer = new Serializer();
+//    Deserializer deserializer = new Deserializer();
+//    Article[] articles;
+//
+//    if (args[0].equals("-d") || args[0].equals("-da")) {
+//      switch(args[1]){
+//        case "nytimes":
+//          NyTimesCsvAdapter nyTimesCsvAdapter = new NyTimesCsvAdapter();
+//          nyTimesCsvAdapter.loadArticles();
+//          serializer.serialize(nyTimesCsvAdapter.getArticles(), "articles.xml");
+//
+//          articles = deserializer.deserialize("articles.xml");
+//          System.out.println(articles.length + " articles in the XML file");
+//          if (args[0].equals("-da")) {
+//            Analyzer.main(null);
+//          }
+//          break;
+//
+//        case "theguardianlocal":
+//          TheGuardianJsonAdapter theGuardianJsonAdapter1 = new TheGuardianJsonAdapter();
+//          theGuardianJsonAdapter1.loadArticles();
+//          serializer.serialize(theGuardianJsonAdapter1.getArticles(), "articles.xml");
+//
+//          articles = deserializer.deserialize("articles.xml");
+//          System.out.println(articles.length + " articles in the XML file");
+//          if (args[0].equals("-da")) {
+//            Analyzer.main(null);
+//          }
+//          break;
+//        case "theguardianapi":
+//          TheGuardianJsonAdapter theGuardianJsonAdapter2 = new TheGuardianJsonAdapter();
+//          theGuardianJsonAdapter2.callApi();
+//          serializer.serialize(theGuardianJsonAdapter2.getArticles(), "articles.xml");
+//
+//          articles = deserializer.deserialize("articles.xml");
+//          System.out.println(articles.length + " articles in the XML file");
+//          if (args[0].equals("-da")) {
+//            Analyzer.main(null);
+//          }
+//          break;
+//      }
+//    }
+//    else
+//    {
+//      Analyzer.main(null);
+//    }
+//  }
 }

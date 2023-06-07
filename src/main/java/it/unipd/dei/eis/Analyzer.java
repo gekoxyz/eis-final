@@ -8,25 +8,28 @@ import java.io.*;
 import java.util.*;
 
 public class Analyzer {
+  private StanfordCoreNLP pipeline;
 
-  public static void main(String[] args) {
-
-    Deserializer deserializer = new Deserializer();
-    Article[] articles = deserializer.deserialize("articles.xml");
-
+  public Analyzer() {
     // set up pipeline properties
     Properties props = new Properties();
     // set the list of annotators to run
     props.setProperty("annotators", "tokenize");
     props.setProperty("tokenize.options", "normalizeAmpersandEntity=true");
     // build pipeline
-    StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
-    // create a document object
+    pipeline = new StanfordCoreNLP(props);
+  }
+
+  public void analyze() {
+    Deserializer deserializer = new Deserializer();
+    Article[] articles = deserializer.deserialize("articles.xml");
 
     HashSet<String> uniqueWords = new HashSet<>();
     HashMap<String, Integer> wordCounter = new HashMap<>();
+
     // TODO: STOPLIST DOESN'T FILTER ALL. ALTER THE STOPLIST OR USE SOMETHING FROM CORENLP TO AVOID THIS
     // TODO: se pareggio in termine di peso si da preferenza in base all'ordine alfabetico
+
     HashSet<String> stopList = loadStopList();
 
     for (Article article : articles) {
@@ -88,4 +91,5 @@ public class Analyzer {
     }
     return stringList;
   }
+
 }

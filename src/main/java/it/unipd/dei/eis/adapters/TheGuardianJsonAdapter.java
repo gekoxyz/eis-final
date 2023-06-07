@@ -9,13 +9,14 @@ import java.io.File;
 import java.io.IOException;
 
 import java.net.URL;
-import java.time.Instant;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -75,7 +76,7 @@ public class TheGuardianJsonAdapter extends Adapter {
     // The dotenv loads the private API key to make the call to The Guardian
     Dotenv dotenv = Dotenv.load();
     // The current timestamp is used as the filename
-    String filePath = folderPath + Instant.now().getEpochSecond() + ".json";
+    String filePath = folderPath + generateFileName();
     try {
       for (int pageNumber = 1; pageNumber <= pages; pageNumber++) {
         // setting up request URL with the API key and page number
@@ -101,6 +102,16 @@ public class TheGuardianJsonAdapter extends Adapter {
     } catch (IOException e) {
       System.err.println("[INFO] - Error calling the API: " + e.getMessage());
     }
+  }
+
+  /**
+   * Generates the file name for the articles that the api is going to download.
+   *
+   * @return the filename formatted as {@code theguardian_articles_currenttimestamp.json}
+   */
+  private String generateFileName() {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss_SSS");
+    return "theguardian_articles_" + LocalDateTime.now().format(formatter) + ".json";
   }
 
   /**
