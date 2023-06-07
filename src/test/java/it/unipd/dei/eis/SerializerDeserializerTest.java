@@ -79,23 +79,11 @@ public class SerializerDeserializerTest {
         assertEquals("Title 2", articles[1].getTitle());
         assertEquals("Body text 2", articles[1].getBodyText());
 
-        // Clean up the temporary directory
+        // Delete temporary file
         try {
             tempFile.deleteOnExit();
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    private void deleteTempDirectory(File tempDir) {
-        if (tempDir != null) {
-            File[] files = tempDir.listFiles();
-            if (files != null) {
-                for (File file : files) {
-                    file.delete();
-                }
-            }
-            tempDir.delete();
         }
     }
 }
