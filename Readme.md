@@ -127,8 +127,8 @@ Richieste:
 - estrarre termini e peso a partire dal file in cui è memorizzato l'articolo
 - supporto a nuove strutture per memorizzare ed avere accesso ai termini più importanti
 - chiedere all'utente se vuole eseguire solo il download, solo l'estrazione dei termini a partire dal file o entrambe le
-  azioni ?quindi ci saranno minimo 2 e massimo 3 file? ?quindi il file di download e quello dell'articolo serializzato
-  sono diversi?
+  azioni. L’utente deve poter specificare se eseguire solo il download, solo l’estrazione dei termini a
+  partire dai file in cui sono stati memorizzati gli articoli, o entrambe le azioni in sequenza.
 
 ## Article
 
