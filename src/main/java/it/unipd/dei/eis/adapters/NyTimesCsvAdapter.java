@@ -21,6 +21,14 @@ public class NyTimesCsvAdapter extends Adapter {
    */
   private String folderPath = "./assets/nytimes/";
 
+  public NyTimesCsvAdapter() {
+    super();
+  }
+
+  public NyTimesCsvAdapter(String folderPath) {
+    super();
+  }
+
   /**
    * Loads articles from the specified folder as specified by the superclass {@code Adapter}
    */
