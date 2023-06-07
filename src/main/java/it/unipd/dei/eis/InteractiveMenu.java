@@ -75,7 +75,6 @@ public class InteractiveMenu {
   }
 
   private void serializeArticlesToXml() {
-    Serializer serializer = new Serializer();
     File[] folderList = getAllFoldersInPath("./assets/");
     // Select folder to serialize from
     int choice;
@@ -89,17 +88,38 @@ public class InteractiveMenu {
       System.out.println((++i) + ". Go back");
       // get choice
       choice = readChoice();
+      if (choice == i) return;
     } while (choice - 1 <= 0 || choice - 1 >= folderList.length);
     int selectedFolderIndex = choice - 1;
     System.out.println("You selected the folder: " + folderList[selectedFolderIndex].getName());
+
+    if (folderList[selectedFolderIndex].getName() == "the_guardian") {
+      // instantiate the guardian adapter
+    } else if (folderList[selectedFolderIndex].getName() == "nytimes") {
+      // instantiate nytimes adapter
+    }
+
     // Get an array of all files in the folder
     File[] fileNames = new File(folderList[selectedFolderIndex].toString()).listFiles();
     // Sorting alphabetically so Winzzoz and Linux/OSX have the same ordering
     Arrays.sort(fileNames, Comparator.comparing(File::getName));
-    // Show all files in the folder
+    // Get the files to serialize
+    File[] selectedFiles = getFilesToSerialize(fileNames);
+    for (File f : selectedFiles) {
+      System.out.println(f.getName());
+    }
 
+    Serializer serializer = new Serializer();
+  }
+
+  private void analyzeArticles() {
+    // TODO: CHOOSE FILES TO ANALYZE
+  }
+
+  private File[] getFilesToSerialize(File[] fileNames) {
     Set<File> selectedFiles = new HashSet<>();
-
+    int choice;
+    int i;
     do {
       System.out.println("What file/s do you want to serialize?");
       i = 0;
@@ -118,17 +138,7 @@ public class InteractiveMenu {
         System.out.println("The file is not in range!");
       }
     } while (choice != i);
-
-    System.out.println("YOU ARE GOING TO SERIALIZE");
-    for (File f : selectedFiles) {
-      System.out.println(f.getName());
-    }
-
-
-  }
-
-  private void analyzeArticles() {
-    // TODO: CHOOSE FILES TO ANALYZE
+    return selectedFiles.toArray(new File[0]);
   }
 
   private File[] getAllFoldersInPath(String folderPath) {

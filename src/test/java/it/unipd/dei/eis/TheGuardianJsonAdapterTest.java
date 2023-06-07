@@ -1,6 +1,5 @@
 package it.unipd.dei.eis;
 
-import it.unipd.dei.eis.Article;
 import it.unipd.dei.eis.adapters.NyTimesCsvAdapter;
 import it.unipd.dei.eis.adapters.TheGuardianJsonAdapter;
 import it.unipd.dei.eis.serialization.Deserializer;
@@ -29,14 +28,14 @@ public class TheGuardianJsonAdapterTest {
     }
 
     /**
-     * Tests the {@link TheGuardianJsonAdapter#loadArticles()} method to ensure articles are loaded successfully.
+     * Tests the {@link TheGuardianJsonAdapter#loadAllArticles()} method to ensure articles are loaded successfully.
      * It also verifies the content of the articles by comparing their titles and body texts.
      */
     @Test
     @Order(1)
     public void testLoadArticles() {
 
-        adapter.loadArticles();
+        adapter.loadAllArticles();
         serializer.serialize(adapter.getArticles(), "articles.xml");
 
         // Verify that articles are loaded
@@ -54,13 +53,13 @@ public class TheGuardianJsonAdapterTest {
     }
 
     /**
-     * Test the {@link TheGuardianJsonAdapter#loadArticles()} method.
+     * Test the {@link TheGuardianJsonAdapter#loadAllArticles()} method.
      * It loads articles from the json file and verifies that the articles are correctly loaded. (Check all articles)
      */
     @Test
     @Order(2)
     public void testAllLoadArticles() {
-        adapter.loadArticles();
+        adapter.loadAllArticles();
         // deserialize local xml
         Deserializer xml_dsl = new Deserializer();
         Article[] a = xml_dsl.deserialize("./articles.xml");
@@ -85,7 +84,7 @@ public class TheGuardianJsonAdapterTest {
         assertNotNull(articles); // ensure that the array of articles is not null
         assertEquals(0, articles.length); // ensure that the array of articles is empty if loadArticles has not been called yet
 
-        adapter.loadArticles();
+        adapter.loadAllArticles();
         articles = adapter.getArticles();
         assertNotNull(articles); // ensure that the array of articles is not null
         assertTrue(articles.length > 0); // ensure that the array of articles is not empty after loadArticles has been called

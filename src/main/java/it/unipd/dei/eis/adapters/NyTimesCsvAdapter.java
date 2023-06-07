@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * Adapter for the NyTimes csv file that has been provided through moodle
@@ -22,9 +24,16 @@ public class NyTimesCsvAdapter extends Adapter {
   /**
    * Loads articles from the specified folder as specified by the superclass {@code Adapter}
    */
-  public void loadArticles() {
+  public void loadAllArticles() {
     // Get an array of all files in the folder
     File[] files = new File(folderPath).listFiles();
+    // load the actual articles
+    loadArticlesFromList(files);
+  }
+
+  public void loadArticlesFromList(File[] files) {
+    // Sorting alphabetically so Winzzoz and Linux/OSX have the same ordering
+    Arrays.sort(files, Comparator.comparing(File::getName));
     assert files != null;
     for (File filePath : files) {
       // Open CSV with CSVReader

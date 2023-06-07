@@ -1,7 +1,6 @@
 package it.unipd.dei.eis;
 
 import it.unipd.dei.eis.adapters.NyTimesCsvAdapter;
-import it.unipd.dei.eis.adapters.TheGuardianJsonAdapter;
 import it.unipd.dei.eis.serialization.Deserializer;
 import it.unipd.dei.eis.serialization.Serializer;
 import org.junit.jupiter.api.*;
@@ -25,14 +24,14 @@ public class NyTimesCsvAdapterTest {
     }
 
     /**
-     * Tests the {@link NyTimesCsvAdapter#loadArticles()} method to ensure articles are loaded successfully.
+     * Tests the {@link NyTimesCsvAdapter#loadAllArticles()} method to ensure articles are loaded successfully.
      * It also verifies the content of the articles by comparing their titles and body texts.
      */
     @Test
     @Order(1)
     public void testLoadArticles() {
 
-        adapter.loadArticles();
+        adapter.loadAllArticles();
         serializer.serialize(adapter.getArticles(), "articles.xml");
 
         // Verify that articles are loaded
@@ -52,7 +51,7 @@ public class NyTimesCsvAdapterTest {
         assertEquals(s, article3.getBodyText());
     }
     /**
-     * Test the {@link NyTimesCsvAdapter#loadArticles()} method.
+     * Test the {@link NyTimesCsvAdapter#loadAllArticles()} method.
      * It loads articles from the CSV file and verifies that the articles are correctly loaded. (Check all articles)
      */
     @Test
@@ -80,7 +79,7 @@ public class NyTimesCsvAdapterTest {
         assertNotNull(articles); // ensure that the array of articles is not null
         assertEquals(0, articles.length); // ensure that the array of articles is empty if loadArticles has not been called yet
 
-        adapter.loadArticles();
+        adapter.loadAllArticles();
         articles = adapter.getArticles();
         assertNotNull(articles); // ensure that the array of articles is not null
         assertTrue(articles.length > 0); // ensure that the array of articles is not empty after loadArticles has been called
