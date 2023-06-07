@@ -84,7 +84,7 @@ Deliverables:
 - [ ] Domain model in UML
 - [ ] Design model in UML
 - [ ] Codice (java + class/jar)
-- [ ] Test (documento + report dei test) ?quindi i test devono generare un log?
+- [ ] Test (documento + report dei test) vd mail prof, + test analyzer e test callApi
 - [ ] manuale
     - [x] breve panoramica ad alto livello del progetto (come sono state implementate le funzionalità)
     - [ ] come installare ed eseguire il software
