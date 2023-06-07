@@ -17,6 +17,7 @@ public class SerializerDeserializerTest {
 
     private Serializer serializer;
     private Deserializer deserializer;
+    private String testFilePath = "./src/test/test.xml";
 
     /**
      * Set up the test environment before each test method.
@@ -29,18 +30,18 @@ public class SerializerDeserializerTest {
 
     /**
      * Test the serialization of articles to XML.
+     * Create a xml file inside test folder.
      */
     @Test
     @Order(1)
     public void testA() {
-        System.out.println("test a");
         // Create an array of articles
         Article[] articles = new Article[2];
         articles[0] = new Article("Title 1", "Body text 1");
         articles[1] = new Article("Title 2", "Body text 2");
 
         // Serialize the articles to XML
-        serializer.serialize(articles, "test.xml");
+        serializer.serialize(articles, testFilePath);
     }
 
     /**
@@ -49,16 +50,13 @@ public class SerializerDeserializerTest {
     @Test
     @Order(2)
     public void testB() {
-        System.out.println("test b");
-        // Define the XML file to deserialize
-        String fileName = "test.xml";
 
         // check if file exists
-        File file = new File("test.xml");
-        //assertTrue(file.exists());
+        File file = new File(testFilePath);
+        assertTrue(file.exists());
 
         // Deserialize the XML file and extract articles
-        Article[] articles = deserializer.deserialize(fileName);
+        Article[] articles = deserializer.deserialize(testFilePath);
 
         // Verify the deserialized articles
         assertNotNull(articles);
@@ -70,15 +68,5 @@ public class SerializerDeserializerTest {
 
         assertEquals("Title 2", articles[1].getTitle());
         assertEquals("Body text 2", articles[1].getBodyText());
-        try {
-            if (file.delete()) {
-                System.out.println("Deleted the file: " + file.getName());
-            } else {
-                System.out.println("Failed to delete the file.");
-            }
-        } catch (Exception e) {
-                e.printStackTrace();
-        }
-
     }
 }
