@@ -39,10 +39,12 @@ public class Analyzer {
     HashSet<String> uniqueWords = new HashSet<>();
     HashMap<String, Integer> wordCounter = new HashMap<>();
 
-    // TODO: STOPLIST DOESN'T FILTER ALL. ALTER THE STOPLIST OR USE SOMETHING FROM CORENLP TO AVOID THIS
     // TODO: se pareggio in termine di peso si da preferenza in base all'ordine alfabetico
 
     HashSet<String> stopList = loadStopList();
+
+    int nuclearIgnoreCaseCounter = 0;
+    int nulcearCounter = 0;
 
     for (Article article : articles) {
       // annotate the body text
@@ -56,10 +58,15 @@ public class Analyzer {
       }
 
       for (String el : uniqueWords) {
+        if (el.equalsIgnoreCase("nuclear")) nuclearIgnoreCaseCounter++;
+        if (el.equals("nuclear")) nulcearCounter++;
         wordCounter.put(el, wordCounter.getOrDefault(el, 0) + 1);
       }
       uniqueWords.clear();
     }
+
+    System.out.println("NUCLEAR IGNORE CASE " + nuclearIgnoreCaseCounter);
+    System.out.println("NUCLEAR " + nulcearCounter);
 
     // Step 1: Get the entry set from the map
     Set<Map.Entry<String, Integer>> entrySet = wordCounter.entrySet();

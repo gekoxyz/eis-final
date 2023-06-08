@@ -28,7 +28,7 @@ public class TheGuardianJsonAdapter extends Adapter {
   /**
    * folder path as specified by the superclass {@code Adapter}
    */
-  String folderPath = "./assets/the_guardian/";
+  String folderPath = "./assets/theguardian/";
 
   public TheGuardianJsonAdapter() {
     super();
@@ -36,7 +36,7 @@ public class TheGuardianJsonAdapter extends Adapter {
 
   public TheGuardianJsonAdapter(String folderPath) {
     super();
-   this.folderPath = folderPath;
+    this.folderPath = folderPath;
   }
 
   /**

@@ -27,6 +27,7 @@ public class NyTimesCsvAdapter extends Adapter {
 
   public NyTimesCsvAdapter(String folderPath) {
     super();
+    this.folderPath = folderPath;
   }
 
   /**

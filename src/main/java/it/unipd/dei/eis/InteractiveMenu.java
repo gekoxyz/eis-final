@@ -19,11 +19,9 @@ public class InteractiveMenu {
 
   public void runMenu() {
     int choice;
-
     do {
       displayMenu();
-      choice = readChoice();
-
+      choice = readIntChoice();
       switch (choice) {
         case 1:
           callTheGuardianApi();
@@ -40,10 +38,8 @@ public class InteractiveMenu {
         default:
           System.out.println("Invalid choice. Please try again.");
       }
-
       System.out.println();
     } while (choice != 4);
-
     scanner.close();
   }
 
@@ -56,33 +52,23 @@ public class InteractiveMenu {
     System.out.print("Enter your choice: ");
   }
 
-  private int readChoice() {
-    int choice;
-    while (true) {
-      System.out.print("Enter your choice: ");
-      String input = scanner.nextLine();
-      try {
-        choice = Integer.parseInt(input);
-        break;
-      } catch (NumberFormatException e) {
-        System.out.println("Invalid input. Please enter a valid integer.");
-      }
-    }
-    return choice;
-  }
 
   private void callTheGuardianApi() {
     System.out.println("How many articles do you want to download?");
-    int choice = readChoice();
+    int choice = readIntChoice();
     TheGuardianJsonAdapter theGuardianJsonAdapter = new TheGuardianJsonAdapter();
     theGuardianJsonAdapter.callApi(choice);
   }
 
   private void serializeArticlesToXml() {
     File[] folderList = getAllFoldersInPath("./assets/");
+    ArrayList<File> selectedFiles = new ArrayList<>();
     // Select folder to serialize from
     int choice;
     int i;
+    String input;
+    NyTimesCsvAdapter nyTimesCsvAdapter = new NyTimesCsvAdapter();
+    TheGuardianJsonAdapter theGuardianJsonAdapter = new TheGuardianJsonAdapter();
     do {
       System.out.println("From which source do you want to select?");
       i = 0;
@@ -90,64 +76,58 @@ public class InteractiveMenu {
         System.out.println((++i) + ". " + folder.getName());
       }
       System.out.println((++i) + ". Serialize the selected files");
-      System.out.println((++i) + ". Go back");
+      System.out.println((++i) + "b. Go back");
       // get choice
-      choice = readChoice();
-      if (choice == i) return;
+      input = readStringChoice();
+      // TODO: CHECK WHY IT GOES TO MAIN
+      if (input.equalsIgnoreCase("b")) break;
+      else choice = Integer.parseInt(input);
+      // Serialize files
       if (choice == i - 1) {
         Serializer serializer = new Serializer();
-//        serializer.serialize();
+        serializer.serialize(theGuardianJsonAdapter.getArticles());
+      }
+      int selectedFolderIndex = choice - 1;
+      System.out.println("You selected the folder: " + folderList[selectedFolderIndex].getName());
+
+      // Get an array of all files in the folder
+      File[] fileNames = new File(folderList[selectedFolderIndex].toString()).listFiles();
+      // Sorting alphabetically so Winzzoz and Linux/OSX have the same ordering
+      assert fileNames != null;
+      Arrays.sort(fileNames, Comparator.comparing(File::getName));
+      // Get the files to load
+      File[] toLoad = selectFilesToSerialize(fileNames);
+      if (folderList[selectedFolderIndex].toString().equals("nytimes")) {
+        nyTimesCsvAdapter.loadArticlesFromList(toLoad);
+      } else if (folderList[selectedFolderIndex].toString().equals("theguardian")) {
+        theGuardianJsonAdapter.loadArticlesFromList(toLoad);
       }
     } while (choice - 1 <= 0 || choice - 1 >= folderList.length);
-    int selectedFolderIndex = choice - 1;
-    System.out.println("You selected the folder: " + folderList[selectedFolderIndex].getName());
-
-    // Get an array of all files in the folder
-    File[] fileNames = new File(folderList[selectedFolderIndex].toString()).listFiles();
-    // Sorting alphabetically so Winzzoz and Linux/OSX have the same ordering
-    Arrays.sort(fileNames, Comparator.comparing(File::getName));
-    // Get the files to serialize
-    File[] selectedFiles = getFilesToSerialize(fileNames);
-    for (File f : selectedFiles) {
-      System.out.println(f.getName());
-    }
-
-    Serializer serializer = new Serializer();
-    TheGuardianJsonAdapter theGuardianJsonAdapter = new TheGuardianJsonAdapter();
-    NyTimesCsvAdapter nyTimesCsvAdapter = new NyTimesCsvAdapter();
-
-    if (folderList[selectedFolderIndex].getName().equals("the_guardian")) {
-      theGuardianJsonAdapter.loadArticlesFromList(selectedFiles);
-    } else if (folderList[selectedFolderIndex].getName().equals("nytimes")) {
-      nyTimesCsvAdapter.loadArticlesFromList(selectedFiles);
-    }
 
   }
 
-  private void analyzeArticles() {
-    // TODO: CHOOSE FILES TO ANALYZE
-  }
-
-  private File[] getFilesToSerialize(File[] fileNames) {
+  private File[] selectFilesToSerialize(File[] fileNames) {
     Set<File> selectedFiles = new HashSet<>();
     int choice;
     int i;
-    do {
+    String input;
+    while (true) {
       System.out.println("What file/s do you want to serialize?");
       i = 0;
+      // TODO: CHECK IF IT'S IN SELECTEDFILES AND PRINT [X] if selected
       for (File fileName : fileNames) {
         System.out.println((++i) + ". " + fileName.getName());
       }
-      System.out.println((++i) + ". Go back");
+      System.out.println("b. Go back");
       // get choice
-      choice = readChoice();
+      input = readStringChoice();
+      if (input.equalsIgnoreCase("b")) break;
+      else choice = Integer.parseInt(input);
       // add selected file to a set of files if in range
-      if (choice - 1 >= 0 && choice - 1 < fileNames.length) {
+      if (choice - 1 >= 0 && choice - 1 <= fileNames.length) {
         selectedFiles.add(fileNames[choice - 1]);
-      } else if (choice > fileNames.length) {
-        System.out.println("The file is not in range!");
       }
-    } while (choice != i);
+    }
     return selectedFiles.toArray(new File[0]);
   }
 
@@ -168,4 +148,38 @@ public class InteractiveMenu {
     return folders.toArray(new File[0]);
   }
 
+  private void analyzeArticles() {
+    // TODO: CHOOSE FILES TO ANALYZE
+  }
+
+  private String readStringChoice() {
+    while (true) {
+      System.out.print("Enter your choice: ");
+      String input = scanner.nextLine();
+      if (input.equalsIgnoreCase("b")) {
+        return "b";
+      }
+      try {
+        int choice = Integer.parseInt(input);
+        return Integer.toString(choice);
+      } catch (NumberFormatException e) {
+        System.out.println("Invalid input. Please enter a valid integer or 'b' to go back.");
+      }
+    }
+  }
+
+  private int readIntChoice() {
+    int choice;
+    while (true) {
+      System.out.print("Enter your choice: ");
+      String input = scanner.nextLine();
+      try {
+        choice = Integer.parseInt(input);
+        break;
+      } catch (NumberFormatException e) {
+        System.out.println("Invalid input. Please enter a valid integer.");
+      }
+    }
+    return choice;
+  }
 }
