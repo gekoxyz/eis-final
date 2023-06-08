@@ -9,7 +9,8 @@ import java.util.*;
 
 /**
  * The Analyzer class contains the functions that analyze terms in articles.
- * The Analysys's result is saved in an "output.txt" file*/
+ * The Analysys's result is saved in an "output.txt" file
+ */
 public class Analyzer {
   /**
    * Pipeline from the CoreNLP library used to scan terms in Articles
@@ -99,6 +100,7 @@ public class Analyzer {
 
   /**
    * Function that loads the StopList
+   *
    * @return the loaded StopList
    */
   private static HashSet<String> loadStopList() {
