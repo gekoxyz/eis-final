@@ -277,6 +277,7 @@ public class InteractiveMenu {
         // selected file is fileNames[choice - 1]
         Analyzer analyzer = new Analyzer();
         analyzer.analyze("./assets/" + fileNames[choice - 1], "./assets/output.txt");
+        System.out.println("The analyzed file output has been saved in ./assets/output.txt");
         exit = true;
       } else {
         System.out.println("Invalid choice. Please try again.");
