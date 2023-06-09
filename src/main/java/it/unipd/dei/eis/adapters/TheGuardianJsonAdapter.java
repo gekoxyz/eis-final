@@ -28,15 +28,13 @@ public class TheGuardianJsonAdapter extends Adapter {
   /**
    * folder path as specified by the superclass {@code Adapter}
    */
-  String folderPath = "./assets/theguardian/";
 
   public TheGuardianJsonAdapter() {
-    super();
+    super("./assets/theguardian/");
   }
 
   public TheGuardianJsonAdapter(String folderPath) {
-    super();
-    this.folderPath = folderPath;
+    super(folderPath);
   }
 
   /**
@@ -52,7 +50,6 @@ public class TheGuardianJsonAdapter extends Adapter {
   public void loadArticlesFromList(File[] files) {
     // Sorting alphabetically so Winzzoz and Linux/OSX have the same ordering
     Arrays.sort(files, Comparator.comparing(File::getName));
-    assert files != null;
     for (File filePath : files) {
       File jsonFile = new File(filePath.toString());
       try {
@@ -82,11 +79,11 @@ public class TheGuardianJsonAdapter extends Adapter {
 
   /**
    * Calls The Guardian's API and saves the entire json response into the appropriate folder in the assets. The called endpoint is
-   * {@code https://content.guardianapis.com/search?api-key=********&page=i&show-fields=bodyText&page-size=50}
+   * {@code https://content.guardianapis.com/search?api-key=********&page=i&show-fields=bodyText&page-size=200&q=query}
    *
    * @param pages the number of pages to be downloaded
    */
-  public String[] callApi(int pages) {
+  public String[] callApi(int pages, String query) {
     ArrayList<String> downloadedFiles = new ArrayList<>();
     // The dotenv loads the private API key to make the call to The Guardian
     Dotenv dotenv = Dotenv.load();
@@ -95,7 +92,7 @@ public class TheGuardianJsonAdapter extends Adapter {
       for (int pageNumber = 1; pageNumber <= pages; pageNumber++) {
         // setting up request URL with the API key and page number
         URL url = new URL("https://content.guardianapis.com/search?api-key=" + dotenv.get("THEGUARDIAN_API_KEY") +
-                "&page=" + pageNumber + "&show-fields=bodyText&page-size=50");
+                "&page=" + pageNumber + "&show-fields=bodyText&page-size=200&q=" + query);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         // getting the actual response into a String
@@ -133,10 +130,19 @@ public class TheGuardianJsonAdapter extends Adapter {
   }
 
   /**
-   * Default call to the API which downloads just one page
+   * Default call to the API which downloads just one page with no specified query
    */
   public void callApi() {
-    callApi(1);
+    callApi(1, "");
+  }
+
+  /**
+   * Call to the API which downloads the specified number of pages with no specified query
+   *
+   * @param pages the number of pages to download
+   */
+  public void callApi(int pages) {
+    callApi(pages, "");
   }
 
 }

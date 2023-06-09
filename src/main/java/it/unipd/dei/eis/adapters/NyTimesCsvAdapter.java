@@ -19,31 +19,21 @@ public class NyTimesCsvAdapter extends Adapter {
   /**
    * folder path as specified by the superclass {@code Adapter}
    */
-  private String folderPath = "./assets/nytimes/";
 
   public NyTimesCsvAdapter() {
-    super();
+    super("./assets/nytimes/");
   }
 
   public NyTimesCsvAdapter(String folderPath) {
-    super();
-    this.folderPath = folderPath;
+    super(folderPath);
   }
 
   /**
    * Loads articles from the specified folder as specified by the superclass {@code Adapter}
    */
-  public void loadAllArticles() {
-    // Get an array of all files in the folder
-    File[] files = new File(folderPath).listFiles();
-    // load the actual articles
-    loadArticlesFromList(files);
-  }
-
   public void loadArticlesFromList(File[] files) {
     // Sorting alphabetically so Winzzoz and Linux/OSX have the same ordering
     Arrays.sort(files, Comparator.comparing(File::getName));
-    assert files != null;
     for (File filePath : files) {
       // Open CSV with CSVReader
       CSVReader reader;
@@ -74,6 +64,7 @@ public class NyTimesCsvAdapter extends Adapter {
       } catch (CsvValidationException e) {
         System.out.println("[ERROR] - Couldn't validate the CSV");
       }
+      System.out.println("[INFO] - Scanned file " + filePath);
     }
   }
 
