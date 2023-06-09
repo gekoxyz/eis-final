@@ -36,7 +36,7 @@ public class Analyzer {
    * Function to analyze the articles
    */
   public void analyze() {
-    analyze("articles.xml", "output.xml");
+    analyze("./assets/articles.xml", "./assets/output.xml");
   }
 
   /**
@@ -113,7 +113,7 @@ public class Analyzer {
   private static HashSet<String> loadStopList() {
     HashSet<String> stringList = new HashSet<>();
     try (BufferedReader reader = new BufferedReader(
-            new FileReader("./resources/coreNLP/stoplist.txt"))) {
+            new FileReader("./assets/stoplist.txt"))) {
       String line;
       while ((line = reader.readLine()) != null) {
         stringList.add(line);

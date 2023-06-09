@@ -48,10 +48,11 @@ public class Main {
 
   public static void main(String[] args) {
     InteractiveMenu interactiveMenu = new InteractiveMenu();
-//    interactiveMenu.runMenu();
-    File[] toSerialize = new File[]{new File("theguardian_articles_v1_p01.json"), new File("theguardian_articles_v1_p03.json"), new File("theguardian_articles_v1_p08.json"), new File("nytimes_articles_v2.csv")};
-    interactiveMenu.chooseAdapterAndSerialize(toSerialize);
-
+    interactiveMenu.runMenu();
+//    File[] toSerialize = new File[]{new File("theguardian_articles_v1_p01.json"), new File("theguardian_articles_v1_p03.json"), new File("theguardian_articles_v1_p08.json"), new File("nytimes_articles_v2.csv")};
+//    interactiveMenu.chooseAdapterAndSerialize(toSerialize);
+//    Serializer serializer = new Serializer();
+//    serializer.serialize(new Article[]{new Article("title1", "text1"), new Article("title2", "text2")}, "articles.xml");
   }
 
 //  public static void main(String[] args) throws IOException {

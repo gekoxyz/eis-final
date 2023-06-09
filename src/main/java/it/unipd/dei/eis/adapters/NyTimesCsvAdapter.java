@@ -64,6 +64,7 @@ public class NyTimesCsvAdapter extends Adapter {
       } catch (CsvValidationException e) {
         System.out.println("[ERROR] - Couldn't validate the CSV");
       }
+      System.out.println("[INFO] - Scanned file " + filePath);
     }
   }
 
