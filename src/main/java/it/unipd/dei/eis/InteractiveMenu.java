@@ -54,7 +54,6 @@ public class InteractiveMenu {
     System.out.println("2. Serialize articles to xml file");
     System.out.println("3. Analyze articles");
     System.out.println("4. Exit");
-    System.out.print("Enter your choice: ");
   }
 
 
