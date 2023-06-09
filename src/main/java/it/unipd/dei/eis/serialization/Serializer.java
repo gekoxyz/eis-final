@@ -6,34 +6,14 @@ import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
-
+import java.io.IOException;
 
 public class Serializer {
-
-  public void createFile(String fileName)
-  {
-    try {
-      Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-
-      // Serialize the document to XML file
-      Transformer transformer = TransformerFactory.newInstance().newTransformer();
-      transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-
-      StreamResult result = new StreamResult(new File(fileName));
-      transformer.transform(new DOMSource(document), result);
-
-      System.out.println("[INFO] - XML file created successfully.");
-    } catch (Exception e) {
-      System.out.println("[ERROR] - Error while creating XML file");
-      e.printStackTrace();
-    }
-  }
 
   /**
    * Serialize article data to the xml file
@@ -43,38 +23,57 @@ public class Serializer {
    */
   public void serialize(Article[] articlesList, String fileName) {
     try {
-      Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+      File xmlFile = new File(fileName);
+      Document document;
+      DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
-      // Create the root element
-      Element rootElement = document.createElement("articles");
-      document.appendChild(rootElement);
+      if (!xmlFile.exists()) {
+        // Create a new XML file if it doesn't exist
+        document = documentBuilder.newDocument();
+        document.appendChild(document.createElement("articles"));
+        writeXmlToFile(xmlFile, document);
+        System.out.println("[INFO] - XML file created successfully.");
+      } else {
+        // Load the existing XML file
+        document = documentBuilder.parse(xmlFile);
+      }
 
-      // Create article elements for each article object
+
+      Element rootElement = document.getDocumentElement();
+
       for (Article article : articlesList) {
         Element articleElement = document.createElement("article");
         rootElement.appendChild(articleElement);
 
-        // Add title element
+        // Add title
         Element titleElement = document.createElement("title");
-        titleElement.appendChild(document.createTextNode(article.getTitle()));
+        titleElement.setTextContent(article.getTitle());
+
         articleElement.appendChild(titleElement);
 
-        // Add bodyText element
-        Element bodyText = document.createElement("bodyText");
-        bodyText.appendChild(document.createTextNode(article.getBodyText()));
-        articleElement.appendChild(bodyText);
+        // Add bodyText
+        Element bodyTextElement = document.createElement("bodyText");
+        bodyTextElement.setTextContent(article.getBodyText());
+        articleElement.appendChild(bodyTextElement);
       }
 
-      // Serialize the document to XML file
-      Transformer transformer = TransformerFactory.newInstance().newTransformer();
-      transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-
-      StreamResult result = new StreamResult(new File(fileName));
-      transformer.transform(new DOMSource(document), result);
-
-      System.out.println("[INFO] - XML file created successfully.");
-    } catch (Exception e) {
+      // Write the modified XML document back to the file
+      writeXmlToFile(xmlFile, document);
+      System.out.println("[INFO] - Added " + articlesList.length + " articles to the XML file");
+    } catch (ParserConfigurationException | IOException | org.xml.sax.SAXException e) {
       System.out.println("[ERROR] - Error while serializing articles");
+      e.printStackTrace();
+    }
+  }
+
+  private void writeXmlToFile(File xmlFile, Document document) {
+    try {
+      TransformerFactory transformerFactory = TransformerFactory.newInstance();
+      Transformer transformer = transformerFactory.newTransformer();
+      transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+      transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+      transformer.transform(new DOMSource(document), new StreamResult(xmlFile));
+    } catch (TransformerException e) {
       e.printStackTrace();
     }
   }
