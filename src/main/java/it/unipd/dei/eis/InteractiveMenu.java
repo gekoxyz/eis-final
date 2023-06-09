@@ -110,9 +110,44 @@ public class InteractiveMenu {
     }
   }
 
-  private void chooseAdapterAndSerialize(File[] filesToSerialize) {
+  //TODO :CHANGE TO PRIVATE
+  public void chooseAdapterAndSerialize(File[] filesToSerialize) {
     // TODO: we have an array of files to serialize. we want to know what adapter they correspond to and instantiate
     //  that adapter after that we want to parse the files to Articles, and when all are done serialize
+
+    // all adapters classes
+    String[] adaptersClassNames = getAllFilesInPath("./src/main/java/it/unipd/dei/eis/adapters/");
+    // remove Adapter from array
+    ArrayList<String> temp = new ArrayList<>(Arrays.asList(adaptersClassNames));
+    temp.remove("Adapter");
+    adaptersClassNames = temp.toArray(new String[0]);
+
+    for (File fileToSerialize : filesToSerialize) {
+
+      for (String adapterClassName : adaptersClassNames) {
+        // se l'inizio del nome dell'adapter (TODO: + estensione) corrisponde al nome della cartella del file da serializzare ho fatto bingo
+        if (adapterClassName.toLowerCase().startsWith(getFolderNameFromFileName(fileToSerialize.getName()))) {
+          System.out.println("-------------");
+          System.out.println(adapterClassName);
+          System.out.println(fileToSerialize.getName());
+          System.out.println("-------------");
+          // call the appropriate classes with reflection
+          try {
+            // Load the class dynamically
+            Class<?> clazz = Class.forName("it.unipd.dei.eis.adapters." + adapterClassName);
+            // Create an instance of the class
+            Object instance = clazz.newInstance();
+            // Get the method with the desired name that takes a String parameter
+            Method method = clazz.getMethod("loadArticleFromFileName", File.class);
+            // Invoke the method, passing the filename as an argument
+            // todo: extract to variable getFolderNameFromFIleName
+            method.invoke(instance, new File("./assets/" + getFolderNameFromFileName(fileToSerialize.getName()) + "/" + fileToSerialize.getName()));
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+        }
+      }
+    }
 
 //    // based on the name of the file to serialize i extract the correct adapter and i call the loadArticlesFromList
 //    for (File fileToSerialize : filesToSerialize) {
@@ -202,7 +237,6 @@ public class InteractiveMenu {
 
       // fileNames.length because i have the filenames and one more options
       if (choice >= 1 && choice <= fileNames.length + 1) {
-        System.out.println("SELECTED " + choice + " ??EQUALSEXIT?? " + i);
         if (choice == i) {
           exit = true;
           continue;
@@ -251,24 +285,34 @@ public class InteractiveMenu {
   }
 
   private void analyzeArticles() {
+    String[] fileNames = getAllFilesInPath("./assets/");
     // TODO: CHOOSE FILES TO ANALYZE
-  }
-
-  private String readStringChoice() {
-    while (true) {
-      System.out.print("Enter your choice: ");
-      String input = scanner.nextLine();
-      if (input.equalsIgnoreCase("b")) {
-        return "b";
+    boolean exit = false;
+    while (!exit) {
+      int i = 0;
+      System.out.println("What file do you want to analyze?");
+      for (String fileName : fileNames) {
+        System.out.println((++i) + ". " + fileName);
       }
-      try {
-        int choice = Integer.parseInt(input);
-        return Integer.toString(choice);
-      } catch (NumberFormatException e) {
-        System.out.println("Invalid input. Please enter a valid integer or 'b' to go back.");
+      System.out.println((++i) + ". Go back");
+
+      int choice = readIntChoice();
+
+      // fileNames.length because i have the filenames and one more options
+      if (choice >= 1 && choice <= fileNames.length + 1) {
+        if (choice == i) {
+          exit = true;
+          continue;
+        }
+        // selected file is fileNames[choice - 1]
+        Analyzer analyzer = new Analyzer();
+        analyzer.analyze(fileNames[choice - 1], "output.txt");
+      } else {
+        System.out.println("Invalid choice. Please try again.");
       }
     }
   }
+
 
   private int readIntChoice() {
     int choice;

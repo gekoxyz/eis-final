@@ -5,6 +5,7 @@ import it.unipd.dei.eis.adapters.TheGuardianJsonAdapter;
 import it.unipd.dei.eis.serialization.Deserializer;
 import it.unipd.dei.eis.serialization.Serializer;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -47,7 +48,10 @@ public class Main {
 
   public static void main(String[] args) {
     InteractiveMenu interactiveMenu = new InteractiveMenu();
-    interactiveMenu.runMenu();
+//    interactiveMenu.runMenu();
+    File[] toSerialize = new File[]{new File("theguardian_articles_v1_p01.json"), new File("theguardian_articles_v1_p03.json"), new File("theguardian_articles_v1_p08.json"), new File("nytimes_articles_v2.csv")};
+    interactiveMenu.chooseAdapterAndSerialize(toSerialize);
+
   }
 
 //  public static void main(String[] args) throws IOException {

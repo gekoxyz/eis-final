@@ -31,7 +31,6 @@ public class NyTimesCsvAdapter extends Adapter {
   /**
    * Loads articles from the specified folder as specified by the superclass {@code Adapter}
    */
-
   public void loadArticlesFromList(File[] files) {
     // Sorting alphabetically so Winzzoz and Linux/OSX have the same ordering
     Arrays.sort(files, Comparator.comparing(File::getName));
