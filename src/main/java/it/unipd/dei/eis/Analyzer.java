@@ -7,26 +7,45 @@ import it.unipd.dei.eis.serialization.Deserializer;
 import java.io.*;
 import java.util.*;
 
+/**
+ * The Analyzer class contains the functions that analyze terms in articles.
+ * The Analysys's result is saved in an "output.txt" file
+ */
 public class Analyzer {
+  /**
+   * Pipeline from the CoreNLP library used to scan terms in Articles
+   */
+  private StanfordCoreNLP pipeline;
 
-  public static void main(String[] args) {
-
-    Deserializer deserializer = new Deserializer();
-    Article[] articles = deserializer.deserialize("articles.xml");
-
+  /**
+   * Initializes the analyzer CoreNLP pipeline
+   */
+  public Analyzer() {
     // set up pipeline properties
     Properties props = new Properties();
     // set the list of annotators to run
     props.setProperty("annotators", "tokenize");
     props.setProperty("tokenize.options", "normalizeAmpersandEntity=true");
     // build pipeline
-    StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
-    // create a document object
+    pipeline = new StanfordCoreNLP(props);
+  }
+
+  /**
+   * Main analysis function
+   */
+  public void analyze() {
+    Deserializer deserializer = new Deserializer();
+    Article[] articles = deserializer.deserialize("articles.xml");
 
     HashSet<String> uniqueWords = new HashSet<>();
     HashMap<String, Integer> wordCounter = new HashMap<>();
-    // TODO: STOPLIST DOESN'T FILTER ALL. ALTER THE STOPLIST OR USE SOMETHING FROM CORENLP TO AVOID THIS
+
+    // TODO: se pareggio in termine di peso si da preferenza in base all'ordine alfabetico
+
     HashSet<String> stopList = loadStopList();
+
+    int nuclearIgnoreCaseCounter = 0;
+    int nulcearCounter = 0;
 
     for (Article article : articles) {
       // annotate the body text
@@ -40,10 +59,15 @@ public class Analyzer {
       }
 
       for (String el : uniqueWords) {
+        if (el.equalsIgnoreCase("nuclear")) nuclearIgnoreCaseCounter++;
+        if (el.equals("nuclear")) nulcearCounter++;
         wordCounter.put(el, wordCounter.getOrDefault(el, 0) + 1);
       }
       uniqueWords.clear();
     }
+
+    System.out.println("NUCLEAR IGNORE CASE " + nuclearIgnoreCaseCounter);
+    System.out.println("NUCLEAR " + nulcearCounter);
 
     // Step 1: Get the entry set from the map
     Set<Map.Entry<String, Integer>> entrySet = wordCounter.entrySet();
@@ -74,10 +98,15 @@ public class Analyzer {
     }
   }
 
+  /**
+   * Function that loads the StopList
+   *
+   * @return the loaded StopList
+   */
   private static HashSet<String> loadStopList() {
     HashSet<String> stringList = new HashSet<>();
     try (BufferedReader reader = new BufferedReader(
-        new FileReader("./assets/coreNLP/stoplist.txt"))) {
+            new FileReader("./resources/coreNLP/stoplist.txt"))) {
       String line;
       while ((line = reader.readLine()) != null) {
         stringList.add(line);
@@ -87,4 +116,5 @@ public class Analyzer {
     }
     return stringList;
   }
+
 }

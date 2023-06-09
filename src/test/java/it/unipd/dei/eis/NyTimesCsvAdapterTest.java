@@ -1,11 +1,13 @@
 package it.unipd.dei.eis;
 
 import it.unipd.dei.eis.adapters.NyTimesCsvAdapter;
-import it.unipd.dei.eis.adapters.TheGuardianJsonAdapter;
 import it.unipd.dei.eis.serialization.Deserializer;
 import it.unipd.dei.eis.serialization.Serializer;
 import org.junit.jupiter.api.*;
 
+
+import java.io.File;
+import java.io.IOException;
 
 import static org.junit.Assert.*;
 
@@ -18,6 +20,7 @@ public class NyTimesCsvAdapterTest {
 
     private NyTimesCsvAdapter adapter;
     private Serializer serializer;
+    private File tempFile = null;
     @BeforeEach
     public void setUp() {
         serializer = new Serializer();
@@ -25,15 +28,23 @@ public class NyTimesCsvAdapterTest {
     }
 
     /**
-     * Tests the {@link NyTimesCsvAdapter#loadArticles()} method to ensure articles are loaded successfully.
+     * Tests the {@link NyTimesCsvAdapter#loadAllArticles()} method to ensure articles are loaded successfully.
      * It also verifies the content of the articles by comparing their titles and body texts.
      */
     @Test
     @Order(1)
     public void testLoadArticles() {
 
-        adapter.loadArticles();
-        serializer.serialize(adapter.getArticles(), "articles.xml");
+        // create temporary file
+        try {
+            tempFile = File.createTempFile("articles", ".xml", new File("./"));
+        } catch (IOException e) {
+            Assertions.fail("Failed to create temporary File");
+            return;
+        }
+
+        adapter.loadAllArticles();
+        serializer.serialize(adapter.getArticles(), tempFile.getAbsolutePath());
 
         // Verify that articles are loaded
         assertNotNull(adapter.getArticles());
@@ -50,23 +61,12 @@ public class NyTimesCsvAdapterTest {
         assertEquals("Nuclear Power Gains in Status After Lobbying", article3.getTitle());
         s = "As the White House was putting together the energy plan that President Bush released last week, there had been almost no talk of nuclear power as a component of the nation's energy strategy. The nuclear industry thought this was a glaring omission, and a handful of top nuclear industry officials decided they needed to take their case to the administration. In mid-March, a cadre of seven nuclear power executives sought and won an hourlong meeting in the White House with Karl Rove, Mr. Bush's top political adviser. Also attending were Lawrence B. Lindsey, the president's top economic adviser, Andrew Lundquist, the executive director of Vice President Dick Cheney's energy task force, and others involved in devising the energy plan. ''We said, Look, we are an important player on this energy team and here are our vital statistics, and we think that you should start talking about nuclear when you talk about increasing the nation's supply,'' Christian H. Poindexter, chairman of the Constellation Energy Group, recalled today. And then a surprising thing happened. ''It was shortly after that, as a matter of fact I think the next night, when the vice president was being interviewed on television, he began to talk about nuclear power for the first time,'' Mr. Poindexter said. Mr. Cheney first discussed nuclear power as an alternative to dirtier fossil fuels in a March 21 interview on CNBC. ''If you want to do something about carbon dioxide emissions,'' he said, ''then you ought to build nuclear power plants because they don't emit any carbon dioxide, they don't emit greenhouse gases.'' Mr. Cheney had missed the meeting with nuclear executives because he was on Capitol Hill, talking to members of Congress who themselves were pushing nuclear energy. In a quick chain reaction, Mr. Cheney put the long-maligned nuclear power industry back on the political map. In the energy plan released last week, the administration breathed new life into the industry, declaring nuclear technology, which provides 20 percent of the nation's electricity, much safer than it was 20 years ago. Today, Mr. Cheney appeared before 350 nuclear industry executives meeting in Washington -- 100 more than showed up at last year's annual meeting of the Nuclear Energy Institute -- and told them the administration wanted to encourage the Nuclear Regulatory Commission to expedite applications for new reactors, relicense existing plants and ''increase the resources devoted to safety and enforcement as we prepare to increase nuclear generating capacity in the future.'' He said the administration also wanted to renew the Price-Anderson Act, which limits nuclear plant operators' liability in case of an accident. Mr. Poindexter is still incredulous. ''In my wildest dreams, when I was over at the White House in March, I couldn't imagine them getting so behind us,'' he said. He was skeptical for good reason. Few industries have enjoyed the kind of renaissance that nuclear power may be poised to undergo. Accidents at Three Mile Island in Pennsylvania and Chernobyl in Ukraine seemed to seal the industry's fate as too dangerous, too uncontrollable and too expensive to win back a frightened public or secure the financial backing of Wall Street. The last nuclear power plant to enter operation was ordered in 1973. There still is no solution to the vexing problem of nuclear waste storage. And while recent polling shows that Americans more lopsidedly oppose dirtier fossil fuels than they oppose nuclear power, they still do not want to live near nuclear power plants. For those wary of a nuclear revival, these problems are no less real today than they were two decades ago. ''The Bush administration should at most be looking to proceed with what the Nuclear Regulatory Commission was planning -- an orderly phase-out of existing power plants,'' said Paul L. Leventhal, president of the Nuclear Control Institute and co-director of the Senate investigation into the 1979 accident at Three Mile Island. ''Instead, they're talking about a new rebirth, and it frankly just doesn't make sense.'' The Union of Concerned Scientists, using data from the industry itself, says that aging plants have experienced eight forced shutdowns in the last 16 months. And Mr. Leventhal said that replacing coal with nuclear power would not appreciably diminish global warming because most of the pollutants that cause global warming come from cars and trucks. Another problem, and one that Mr. Cheney fully acknowledges, is the lack of a national repository for the storage of nuclear waste. In his speech today, the vice president warned that the lack of a storage site could be a deal killer. Without a site, he said, ''eventually the contribution we can count on from the nuclear industry will, in fact, decline.'' The storage problem will not be solved at Yucca Mountain in Nevada, if Nevada politicians and the gambling industry have anything to say about it. Senators Harry Reid, a Democrat, and John Ensign, a Republican, have made opposition to nuclear waste dumping in their state their priority. ''Until they get the waste problem solved,'' Mr. Reid said, ''nothing's going to happen on nuclear power.'' Peter Bradford, a former member of the Nuclear Regulatory Commission, who now teaches energy policy at Yale, said that apart from the safety issues, nuclear power was economically problematic. ''The types of long-term investment necessary to sustain nuclear energy are going to prove very hard to find in this kind of volatile marketplace,'' Mr. Bradford said. Still, there are cheerleaders. One is Representative Billy Tauzin, the Louisiana Republican who heads the Energy and Commerce Committee. He spoke today at the Nuclear Energy Institute's annual meeting and summed up the surprise that others feel at the recent turn of events. ''As we gather here in Washington,'' Mr. Tauzin said, ''who would have thunk that we'd be discussing the possibility of nuclear construction in this country?''";
         assertEquals(s, article3.getBodyText());
-    }
-    /**
-     * Test the {@link NyTimesCsvAdapter#loadArticles()} method.
-     * It loads articles from the CSV file and verifies that the articles are correctly loaded. (Check all articles)
-     */
-    @Test
-    @Order(1)
-    public void testAllLoadArticles() {
-        //adapter.loadArticles();
-        // deserialize local xml
-        Deserializer xml_dsl = new Deserializer();
-        Article[] a = xml_dsl.deserialize("./articles.xml");
 
-        int i = 0;
-        for(Article article : adapter.getArticles()) {
-            assertEquals(article.getTitle(),a[i].getTitle()); // ensure that the first article's title was parsed correctly
-            assertEquals(article.getBodyText(), a[i].getBodyText()); // ensure that the first article's body text was parsed correctly
+        // Delete temporary file
+        try {
+            tempFile.deleteOnExit();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -80,7 +80,7 @@ public class NyTimesCsvAdapterTest {
         assertNotNull(articles); // ensure that the array of articles is not null
         assertEquals(0, articles.length); // ensure that the array of articles is empty if loadArticles has not been called yet
 
-        adapter.loadArticles();
+        adapter.loadAllArticles();
         articles = adapter.getArticles();
         assertNotNull(articles); // ensure that the array of articles is not null
         assertTrue(articles.length > 0); // ensure that the array of articles is not empty after loadArticles has been called

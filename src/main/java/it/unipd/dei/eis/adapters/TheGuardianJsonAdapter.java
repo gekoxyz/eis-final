@@ -9,13 +9,15 @@ import java.io.File;
 import java.io.IOException;
 
 import java.net.URL;
-import java.time.Instant;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -26,22 +28,35 @@ public class TheGuardianJsonAdapter extends Adapter {
   /**
    * folder path as specified by the superclass {@code Adapter}
    */
-  String folderPath = "./assets/the_guardian/";
+  String folderPath = "./assets/theguardian/";
+
+  public TheGuardianJsonAdapter() {
+    super();
+  }
+
+  public TheGuardianJsonAdapter(String folderPath) {
+    super();
+    this.folderPath = folderPath;
+  }
 
   /**
    * Loads articles from the specified folder as specified by the superclass {@code Adapter}
    */
-  public void loadArticles() {
-    ObjectMapper objectMapper = new ObjectMapper();
+  public void loadAllArticles() {
     // Get an array of all files in the folder
     File[] files = new File(folderPath).listFiles();
+    // load the actual articles
+    loadArticlesFromList(files);
+  }
+
+  public void loadArticlesFromList(File[] files) {
     // Sorting alphabetically so Winzzoz and Linux/OSX have the same ordering
     Arrays.sort(files, Comparator.comparing(File::getName));
-    // load the actual articles
     assert files != null;
     for (File filePath : files) {
       File jsonFile = new File(filePath.toString());
       try {
+        ObjectMapper objectMapper = new ObjectMapper();
         // Going into the json nodes to extract data
         JsonNode rootNode = objectMapper.readTree(jsonFile);
         JsonNode resultsNode = rootNode.get("response").get("results");
@@ -71,11 +86,11 @@ public class TheGuardianJsonAdapter extends Adapter {
    *
    * @param pages the number of pages to be downloaded
    */
-  public void callApi(int pages) {
+  public String[] callApi(int pages) {
+    ArrayList<String> downloadedFiles = new ArrayList<>();
     // The dotenv loads the private API key to make the call to The Guardian
     Dotenv dotenv = Dotenv.load();
     // The current timestamp is used as the filename
-    String filePath = folderPath + Instant.now().getEpochSecond() + ".json";
     try {
       for (int pageNumber = 1; pageNumber <= pages; pageNumber++) {
         // setting up request URL with the API key and page number
@@ -93,14 +108,28 @@ public class TheGuardianJsonAdapter extends Adapter {
         }
         String jsonResponse = response.toString();
         // writing response to file
+        String fileName = generateFileName();
+        String filePath = folderPath + fileName;
         try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(filePath))) {
           writer.write(jsonResponse);
         }
         System.out.println("[INFO] - API response saved to " + filePath);
+        downloadedFiles.add(fileName);
       }
     } catch (IOException e) {
       System.err.println("[INFO] - Error calling the API: " + e.getMessage());
     }
+    return downloadedFiles.toArray(new String[0]);
+  }
+
+  /**
+   * Generates the file name for the articles that the api is going to download.
+   *
+   * @return the filename formatted as {@code theguardian_articles_currenttimestamp.json}
+   */
+  private String generateFileName() {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss_SSS");
+    return "theguardian_articles_" + LocalDateTime.now().format(formatter) + ".json";
   }
 
   /**

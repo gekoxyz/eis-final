@@ -16,6 +16,25 @@ import java.io.File;
 
 public class Serializer {
 
+  public void createFile(String fileName)
+  {
+    try {
+      Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+
+      // Serialize the document to XML file
+      Transformer transformer = TransformerFactory.newInstance().newTransformer();
+      transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+
+      StreamResult result = new StreamResult(new File(fileName));
+      transformer.transform(new DOMSource(document), result);
+
+      System.out.println("[INFO] - XML file created successfully.");
+    } catch (Exception e) {
+      System.out.println("[ERROR] - Error while creating XML file");
+      e.printStackTrace();
+    }
+  }
+
   /**
    * Serialize article data to the xml file
    *
