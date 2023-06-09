@@ -111,6 +111,9 @@ public class InteractiveMenu {
   }
 
   private void chooseAdapterAndSerialize(File[] filesToSerialize) {
+    // TODO: we have an array of files to serialize. we want to know what adapter they correspond to and instantiate
+    //  that adapter after that we want to parse the files to Articles, and when all are done serialize
+
 //    // based on the name of the file to serialize i extract the correct adapter and i call the loadArticlesFromList
 //    for (File fileToSerialize : filesToSerialize) {
 //      String folderNameFromFileName = getFolderNameFromFileName(fileToSerialize.getName());
