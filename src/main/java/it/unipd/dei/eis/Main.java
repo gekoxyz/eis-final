@@ -46,17 +46,8 @@ import java.time.format.DateTimeFormatter;
 public class Main {
 
   public static void main(String[] args) {
-//    InteractiveMenu interactiveMenu = new InteractiveMenu();
-//    interactiveMenu.runMenu();
-
-// TODO: Don't delete, check nuclear = 1000 in nyTimes
-
-    NyTimesCsvAdapter nyTimesCsvAdapter = new NyTimesCsvAdapter();
-    nyTimesCsvAdapter.loadAllArticles();
-    Serializer serializer = new Serializer();
-    serializer.serialize(nyTimesCsvAdapter.getArticles());
-    Analyzer analyzer = new Analyzer();
-    analyzer.analyze();
+    InteractiveMenu interactiveMenu = new InteractiveMenu();
+    interactiveMenu.runMenu();
   }
 
 //  public static void main(String[] args) throws IOException {

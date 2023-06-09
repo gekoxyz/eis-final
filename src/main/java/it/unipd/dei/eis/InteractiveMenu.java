@@ -1,10 +1,15 @@
 package it.unipd.dei.eis;
 
 import it.unipd.dei.eis.adapters.NyTimesCsvAdapter;
+import it.unipd.dei.eis.adapters.Adapter;
 import it.unipd.dei.eis.adapters.TheGuardianJsonAdapter;
 import it.unipd.dei.eis.serialization.Serializer;
 
 import java.io.File;
+import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.*;
 
 /**
@@ -27,7 +32,7 @@ public class InteractiveMenu {
           callTheGuardianApi();
           break;
         case 2:
-          serializeArticlesToXml();
+          serializerSubMenu();
           break;
         case 3:
           analyzeArticles();
@@ -45,7 +50,7 @@ public class InteractiveMenu {
 
   private void displayMenu() {
     System.out.println("Menu:");
-    System.out.println("1. Download articles from The Guardian");
+    System.out.println("1. Download 1000 articles from The Guardian for the query nuclear power");
     System.out.println("2. Serialize articles to xml file");
     System.out.println("3. Analyze articles");
     System.out.println("4. Exit");
@@ -54,80 +59,158 @@ public class InteractiveMenu {
 
 
   private void callTheGuardianApi() {
-    System.out.println("How many articles do you want to download?");
-    int choice = readIntChoice();
     TheGuardianJsonAdapter theGuardianJsonAdapter = new TheGuardianJsonAdapter();
-    theGuardianJsonAdapter.callApi(choice);
+    // 1000/200 = 5 pages needed
+    theGuardianJsonAdapter.callApi(5, "nuclear%20power");
   }
 
-  private void serializeArticlesToXml() {
-    File[] folderList = getAllFoldersInPath("./assets/");
+  private void serializerSubMenu() {
+    File[] folders = getAllFoldersInPath("./assets/");
     ArrayList<File> selectedFiles = new ArrayList<>();
-    // Select folder to serialize from
-    int choice;
-    int i;
-    String input;
-    NyTimesCsvAdapter nyTimesCsvAdapter = new NyTimesCsvAdapter();
+
     TheGuardianJsonAdapter theGuardianJsonAdapter = new TheGuardianJsonAdapter();
-    do {
+    NyTimesCsvAdapter nyTimesCsvAdapter = new NyTimesCsvAdapter();
+
+    boolean exit = false;
+
+    while (!exit) {
+      int i = 0;
       System.out.println("From which source do you want to select?");
-      i = 0;
-      for (File folder : folderList) {
+      for (File folder : folders) {
         System.out.println((++i) + ". " + folder.getName());
       }
       System.out.println((++i) + ". Serialize the selected files");
-      System.out.println((++i) + "b. Go back");
-      // get choice
-      input = readStringChoice();
-      // TODO: CHECK WHY IT GOES TO MAIN
-      if (input.equalsIgnoreCase("b")) break;
-      else choice = Integer.parseInt(input);
-      // Serialize files
-      if (choice == i - 1) {
-        Serializer serializer = new Serializer();
-        serializer.serialize(theGuardianJsonAdapter.getArticles());
-      }
-      int selectedFolderIndex = choice - 1;
-      System.out.println("You selected the folder: " + folderList[selectedFolderIndex].getName());
+      System.out.println((++i) + ". Go back");
 
-      // Get an array of all files in the folder
-      File[] fileNames = new File(folderList[selectedFolderIndex].toString()).listFiles();
-      // Sorting alphabetically so Winzzoz and Linux/OSX have the same ordering
-      assert fileNames != null;
-      Arrays.sort(fileNames, Comparator.comparing(File::getName));
-      // Get the files to load
-      File[] toLoad = selectFilesToSerialize(fileNames);
-      if (folderList[selectedFolderIndex].toString().equals("nytimes")) {
-        nyTimesCsvAdapter.loadArticlesFromList(toLoad);
-      } else if (folderList[selectedFolderIndex].toString().equals("theguardian")) {
-        theGuardianJsonAdapter.loadArticlesFromList(toLoad);
-      }
-    } while (choice - 1 <= 0 || choice - 1 >= folderList.length);
+      int choice = readIntChoice();
 
+      // folderList.length+1 because i have the folders and 2 more options
+      if (choice >= 1 && choice <= folders.length + 2) {
+        if (choice == i) {
+          exit = true;
+          continue;
+        }
+        if (choice == (i - 1)) {
+          // serialize files
+          Serializer serializer = new Serializer();
+          // i can call whatever adapter, the articles array is shared
+//          serializer.serialize(theGuardianJsonAdapter.getArticles());
+          System.out.println("USER WANTS TO SERIALIZE: ");
+          for (File f : selectedFiles) {
+            System.out.println(f.getName());
+          }
+          chooseAdapterAndSerialize(selectedFiles.toArray(new File[0]));
+          continue;
+        }
+        // selected folder is folderList[choice - 1]
+        selectedFiles.addAll(Arrays.asList(selectFilesToSerialize(Objects.requireNonNull(folders[choice - 1].listFiles()))));
+      } else {
+        System.out.println("Invalid choice. Please try again.");
+      }
+    }
+  }
+
+  private void chooseAdapterAndSerialize(File[] filesToSerialize) {
+//    // based on the name of the file to serialize i extract the correct adapter and i call the loadArticlesFromList
+//    for (File fileToSerialize : filesToSerialize) {
+//      String folderNameFromFileName = getFolderNameFromFileName(fileToSerialize.getName());
+//      // reflection
+//      try {
+//        // TODO: WARNING: THIS GETS ALSO ADAPTER CLASS WHICH IS ABSTRACT, REMOVE FROM LIST
+//        String[] classNames = getAllFilesInPath("./src/main/java/it/unipd/dei/eis/adapters/");
+//
+//
+//        // Get the class object of the abstract class
+//        Class<Adapter> abstractClass = Adapter.class;
+//        // Get the protected field using reflection
+//        Field protectedField = abstractClass.getDeclaredField("folderName");
+//
+//        // Make the field accessible
+//        protectedField.setAccessible(true);
+//
+////        // Get the value of the protected field
+////        String value = (String) protectedField.get(instance);
+//
+//
+//        for (String className : classNames) {
+//          // Load the class dynamically (packagename+classname)
+//          Class<?> clazz = Class.forName("it.unipd.dei.eis.adapters." + className);
+//          // Get the string attribute field
+//
+//          String clazzFolderName = (String) protectedField.get(clazz);
+//
+//          // Check if the attribute has the desired value
+//          if (clazzFolderName.equals(folderNameFromFileName)) {
+//            // Create an instance of the class using the default constructor
+//            Constructor<?> constructor = clazz.getDeclaredConstructor();
+//            Object instance = constructor.newInstance();
+//
+////              // Do something with the initialized class instance
+//            System.out.println("Initialized class: " + instance.getClass().getSimpleName());
+////              // TODO: LOAD ADAPTERS
+//
+//            // Get the Method object for the method you want to call
+//            Method targetMethod = clazz.getMethod("loadArticleFromFileName", File.class);
+//
+//            // Call the method on the instance
+//            targetMethod.invoke(instance, fileToSerialize);
+//
+//          }
+//        }
+//
+//
+//      } catch (Exception e) {
+//        System.out.println("[ERROR] - Error while trying to call the adapter for the file " + fileToSerialize.getName());
+//        e.printStackTrace();
+//      }
+//    }
+
+  }
+
+  private String getFolderNameFromFileName(String fileName) {
+
+    int underscoreIndex = fileName.indexOf("_");
+    String truncatedString = "";
+    if (underscoreIndex != -1) {
+      truncatedString = fileName.substring(0, underscoreIndex);
+
+
+    } else {
+      System.out.println("[ERROR] - No underscore in file name. Check that all folders in the assets folder are formatted correctly");
+    }
+    return truncatedString;
   }
 
   private File[] selectFilesToSerialize(File[] fileNames) {
     Set<File> selectedFiles = new HashSet<>();
-    int choice;
-    int i;
-    String input;
-    while (true) {
+
+    boolean exit = false;
+
+    while (!exit) {
+      int i = 0;
       System.out.println("What file/s do you want to serialize?");
-      i = 0;
-      // TODO: CHECK IF IT'S IN SELECTEDFILES AND PRINT [X] if selected
       for (File fileName : fileNames) {
-        System.out.println((++i) + ". " + fileName.getName());
+        String selected = (selectedFiles.contains(fileName)) ? "X" : "O";
+        System.out.println((++i) + ". [" + selected + "] " + fileName.getName());
       }
-      System.out.println("b. Go back");
-      // get choice
-      input = readStringChoice();
-      if (input.equalsIgnoreCase("b")) break;
-      else choice = Integer.parseInt(input);
-      // add selected file to a set of files if in range
-      if (choice - 1 >= 0 && choice - 1 <= fileNames.length) {
+      System.out.println((++i) + ". Go back");
+
+      int choice = readIntChoice();
+
+      // fileNames.length because i have the filenames and one more options
+      if (choice >= 1 && choice <= fileNames.length + 1) {
+        System.out.println("SELECTED " + choice + " ??EQUALSEXIT?? " + i);
+        if (choice == i) {
+          exit = true;
+          continue;
+        }
+        // selected file is fileNames[choice - 1]
         selectedFiles.add(fileNames[choice - 1]);
+      } else {
+        System.out.println("Invalid choice. Please try again.");
       }
     }
+
     return selectedFiles.toArray(new File[0]);
   }
 
@@ -146,6 +229,22 @@ public class InteractiveMenu {
     }
     Collections.sort(folders);
     return folders.toArray(new File[0]);
+  }
+
+  private String[] getAllFilesInPath(String folderPath) {
+    ArrayList<String> fileNames = new ArrayList<>();
+    File folder = new File(folderPath);
+    if (folder.isDirectory()) {
+      File[] files = folder.listFiles();
+      if (files != null) {
+        for (File file : files) {
+          if (file.isFile() && !file.getName().equals("Adapter")) {
+            fileNames.add(file.getName().replace(".java", ""));
+          }
+        }
+      }
+    }
+    return fileNames.toArray(new String[0]);
   }
 
   private void analyzeArticles() {
