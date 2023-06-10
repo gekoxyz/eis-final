@@ -136,7 +136,7 @@ public class InteractiveMenu {
     // all adapters classes
     String[] adaptersClassNames = getAllFilesInPath("./src/main/java/it/unipd/dei/eis/adapters/");
     // remove the .java file extension
-    for (int i = 0; i < adaptersClassNames.length - 1; i++) {
+    for (int i = 0; i < adaptersClassNames.length; i++) {
       adaptersClassNames[i] = adaptersClassNames[i].replace(".java", "");
     }
 
