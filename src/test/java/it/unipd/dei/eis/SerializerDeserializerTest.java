@@ -19,7 +19,6 @@ public class SerializerDeserializerTest {
 
     private Serializer serializer;
     private Deserializer deserializer;
-    private static File tempFile = null;
 
     /**
      * Set up the test environment before each test method.
@@ -38,12 +37,12 @@ public class SerializerDeserializerTest {
     @Order(1)
     public void testSerialize() {
         // Create a temporary directory to store the output file
-        try {
-            tempFile = File.createTempFile("test", ".xml", new File("./"));
-        } catch (IOException e) {
-            Assertions.fail("Failed to create temporary File");
-            return;
-        }
+//        try {
+//            tempFile = File.createTempFile("test", ".xml", new File("./"));
+//        } catch (IOException e) {
+//            Assertions.fail("Failed to create temporary File");
+//            return;
+//        }
 
         // Create an array of articles
         Article[] articles = new Article[2];
@@ -51,7 +50,7 @@ public class SerializerDeserializerTest {
         articles[1] = new Article("Title 2", "Body text 2");
 
         // Serialize the articles to XML
-        serializer.serialize(articles, tempFile.getAbsolutePath());
+        serializer.serialize(articles);
     }
 
     /**
@@ -62,11 +61,11 @@ public class SerializerDeserializerTest {
     public void testDeserialize() {
 
         // check if file exists
-        File file = new File(tempFile.getAbsolutePath());
+        File file = new File("./assets/articles.xml");
         assertTrue(file.exists());
 
         // Deserialize the XML file and extract articles
-        Article[] articles = deserializer.deserialize(tempFile.getAbsolutePath());
+        Article[] articles = deserializer.deserialize("./assets/articles.xml");
 
         // Verify the deserialized articles
         assertNotNull(articles);
@@ -79,11 +78,17 @@ public class SerializerDeserializerTest {
         assertEquals("Title 2", articles[1].getTitle());
         assertEquals("Body text 2", articles[1].getBodyText());
 
-        // Delete temporary file
+        // Delete file
+//        try {
+//            tempFile.deleteOnExit();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         try {
-            tempFile.deleteOnExit();
+            file.delete();
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 }
