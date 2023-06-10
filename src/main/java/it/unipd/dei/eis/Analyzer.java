@@ -36,7 +36,7 @@ public class Analyzer {
    * Function to analyze the articles
    */
   public void analyze() {
-    analyze("./assets/articles.xml", "./assets/output.xml");
+    analyze("./assets/articles.xml", "./assets/output.txt");
   }
 
   /**
@@ -91,7 +91,7 @@ public class Analyzer {
    * Function to tokenize a {@code CoreDocument} and check that it contains a char or number, to filter out everything else
    *
    * @param document the document to check
-   * @return a Set containing the words found in the document
+   * @return a Set contai ning the words found in the document
    */
   private static HashSet<String> tokenizeAndCheck(CoreDocument document) {
     Pattern pattern = Pattern.compile(".*[a-zA-Z].*|.*\\d.*");
