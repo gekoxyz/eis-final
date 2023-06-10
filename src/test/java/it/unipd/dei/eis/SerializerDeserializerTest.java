@@ -36,14 +36,6 @@ public class SerializerDeserializerTest {
     @Test
     @Order(1)
     public void testSerialize() {
-        // Create a temporary directory to store the output file
-//        try {
-//            tempFile = File.createTempFile("test", ".xml", new File("./"));
-//        } catch (IOException e) {
-//            Assertions.fail("Failed to create temporary File");
-//            return;
-//        }
-
         // Create an array of articles
         Article[] articles = new Article[2];
         articles[0] = new Article("Title 1", "Body text 1");
@@ -78,12 +70,6 @@ public class SerializerDeserializerTest {
         assertEquals("Title 2", articles[1].getTitle());
         assertEquals("Body text 2", articles[1].getBodyText());
 
-        // Delete file
-//        try {
-//            tempFile.deleteOnExit();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
         try {
             file.delete();
         } catch (Exception e) {

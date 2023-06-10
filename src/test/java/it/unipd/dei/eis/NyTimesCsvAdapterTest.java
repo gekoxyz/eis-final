@@ -20,7 +20,6 @@ public class NyTimesCsvAdapterTest {
 
     private NyTimesCsvAdapter adapter;
     private Serializer serializer;
-    private File tempFile = null;
     @BeforeEach
     public void setUp() {
         serializer = new Serializer();
@@ -34,14 +33,6 @@ public class NyTimesCsvAdapterTest {
     @Test
     @Order(1)
     public void testLoadArticles() {
-
-        // create temporary file
-//        try {
-//            tempFile = File.createTempFile("articles", ".xml", new File("./"));
-//        } catch (IOException e) {
-//            Assertions.fail("Failed to create temporary File");
-//            return;
-//        }
 
         adapter.loadAllArticles();
         serializer.serialize(adapter.getArticles());
@@ -69,11 +60,6 @@ public class NyTimesCsvAdapterTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        try {
-//            tempFile.deleteOnExit();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
     }
 
     /**
