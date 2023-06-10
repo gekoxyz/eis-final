@@ -11,15 +11,25 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * The AnalyzerTest class is responsible for testing the functionality of the Analyzer class.
+ */
 class AnalyzerTest {
 
     private Analyzer analyzer;
 
+    /**
+     * Sets up the Analyzer object before each test case.
+     */
     @BeforeEach
     void setUp() {
         analyzer = new Analyzer();
     }
 
+    /**
+     * Tests the analyze() method of the Analyzer class.
+     * It verifies that the method generates the expected output values .
+     */
     @Test
     void testAnalyze() {
         // Create a sample input file
@@ -53,11 +63,18 @@ class AnalyzerTest {
             assertEquals("altri=2", lines.get(4));
             assertEquals("ancora=2", lines.get(5));
             assertEquals("mi=2", lines.get(6));
+            // can add more assert to check more lines
+            // ...
         } catch (IOException e) {
             e.printStackTrace();
         }
+        outputFileObj.delete();
     }
 
+    /**
+     * Creates a sample XML file for testing purposes.
+     * @throws IOException if an I/O error occurs while creating the file.
+     */
     private void createXMLFile() throws IOException {
         Serializer serializer = new Serializer();
         // Create an array of articles
