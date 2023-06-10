@@ -20,7 +20,7 @@ class AnalyzerTest {
         analyzer = new Analyzer();
     }
 
-    //@Test
+    @Test
     void testAnalyze() {
         // Create a sample input file
         try {
@@ -33,7 +33,7 @@ class AnalyzerTest {
         analyzer.analyze();
 
         // Verify that the output file is created
-        File outputFileObj = new File("output.txt");
+        File outputFileObj = new File("./assets/output.txt");
         assertTrue(outputFileObj.exists());
 
         // Verify the content of the output file
@@ -46,9 +46,13 @@ class AnalyzerTest {
 
             // Add your assertions here
             // Verify the expected lines in the output file
-            assertEquals("word1: count1", lines.get(0));
-            assertEquals("word2: count2", lines.get(1));
-            // ...
+            assertEquals("di=4", lines.get(0));
+            assertEquals("test=4", lines.get(1));
+            assertEquals("servono=3", lines.get(2));
+            assertEquals("titolo=3", lines.get(3));
+            assertEquals("altri=2", lines.get(4));
+            assertEquals("ancora=2", lines.get(5));
+            assertEquals("mi=2", lines.get(6));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -56,20 +60,14 @@ class AnalyzerTest {
 
     private void createXMLFile() throws IOException {
         Serializer serializer = new Serializer();
-        File myObj = new File("articles.xml");
-        try {
-            myObj.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
         // Create an array of articles
-        Article[] articles = new Article[2];
-        articles[0] = new Article("Questo è un titolo di test", "Stiamo facendo dei test su questo file. Test test test...");
-        articles[1] = new Article("Un altro titolo!", "Altro body text per altri test");
-
+        Article[] articles = new Article[4];
+        articles[0] = new Article("Questo è un titolo di test", "Stiamo facendo dei test su questo file. Test test test... sto testando tutto mi servono ancora termini");
+        articles[1] = new Article("Un altro titolo!", "Altro body text per altri test, devo arrivare anche a 50 termini. Aggiungo un pò di parole per non fare andare male il test. Test");
+        articles[2] = new Article("Siamo al terzo articolo di test", "Ciao! Sono una descrizione per questo terzo oggetto articolo, mi servono ancora 9 parole!");
+        articles[3] = new Article("Quarto titolo test", "Sono l'ultimo degli articoli di Test o ne servono altri? Mattia Bastianello Matteo Galiazzo Davide Bertini Matteo Rampin elementi di ingegneria del software");
         // Serialize the articles to XML
-        serializer.serialize(articles, myObj.getAbsolutePath());
+        serializer.serialize(articles);
     }
 }
 

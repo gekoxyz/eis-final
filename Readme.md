@@ -15,8 +15,9 @@ serializzato in xml oppure all'```Analyzer``` per essere analizzato.
 - Registrare una key per l'API di The Guardian all'indirizzo https://open-platform.theguardian.com/access/
 - Nella directory principale del progetto, creare un file denominato ".env"
 - Inserire all'interno del file .env la propria API key di The Guardian con la sintassi seguente: THEGUARDIAN_API_KEY=la-vostra-chiave
-- Con il terminale aprire la directory principale del progetto e digitare il comando "mvn install"
-- ## ROBA MANCANTE 
+- Con il terminale aprire la directory principale del progetto e digitare il comando "mvn package", oppure "mvn package -DskipTests" per non eseguire test
+- Spostare il file "./target/eis-final-1.0-SNAPSHOT.jar" nella directory principale del progetto 
+- Eseguire "java -jar eis-final-1.0-SNAPSHOT.jar"
 
 ## Eseguire il software
 Per eseguire il software aprire un terminale nella directory principale del programma e utilizzare:
