@@ -93,6 +93,7 @@ public class InteractiveMenu {
             System.out.println("- " + f.getName());
           }
           chooseAdapterAndSerialize(selectedFiles.toArray(new File[0]));
+          exit = true;
           continue;
         }
         // selected folder is folderList[choice - 1]
@@ -205,8 +206,12 @@ public class InteractiveMenu {
           exit = true;
           continue;
         }
-        // selected file is fileNames[choice - 1]
-        selectedFiles.add(fileNames[choice - 1]);
+        File selectedFile = fileNames[choice - 1];
+        if (selectedFiles.contains(selectedFile)) {
+          selectedFiles.remove(selectedFile);
+        } else {
+          selectedFiles.add(selectedFile);
+        }
       } else {
         System.out.println("Invalid choice. Please try again.");
       }
