@@ -6,15 +6,18 @@ import it.unipd.dei.eis.serialization.Deserializer;
 
 import java.io.*;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * The Analyzer class contains the functions that analyze terms in articles.
- * The Analysys's result is saved in an "output.txt" file*/
+ * The Analysys's result is saved in an "output.txt" file
+ */
 public class Analyzer {
   /**
    * Pipeline from the CoreNLP library used to scan terms in Articles
    */
-  private StanfordCoreNLP pipeline;
+  private static StanfordCoreNLP pipeline;
+  private static final HashSet<String> stopList = loadStopList();
 
   /**
    * Initializes the analyzer CoreNLP pipeline
@@ -30,74 +33,87 @@ public class Analyzer {
   }
 
   /**
-   * Main analysis function
+   * Function to analyze the articles
    */
   public void analyze() {
+    analyze("./assets/articles.xml", "./assets/output.xml");
+  }
+
+  /**
+   * Function to analyze the articles
+   *
+   * @param inputFile
+   * @param outputFile
+   */
+  public void analyze(String inputFile, String outputFile) {
     Deserializer deserializer = new Deserializer();
-    Article[] articles = deserializer.deserialize("articles.xml");
+    Article[] articles = deserializer.deserialize(inputFile);
 
     HashSet<String> uniqueWords = new HashSet<>();
     HashMap<String, Integer> wordCounter = new HashMap<>();
 
-    // TODO: STOPLIST DOESN'T FILTER ALL. ALTER THE STOPLIST OR USE SOMETHING FROM CORENLP TO AVOID THIS
-    // TODO: se pareggio in termine di peso si da preferenza in base all'ordine alfabetico
-
-    HashSet<String> stopList = loadStopList();
-
     for (Article article : articles) {
-      // annotate the body text
-      CoreDocument doc = new CoreDocument(article.getBodyText());
-      pipeline.annotate(doc);
-
-      for (CoreLabel tok : doc.tokens()) {
-        if (!stopList.contains(tok.word())) {
-          uniqueWords.add(tok.word());
-        }
-      }
-
+      uniqueWords.addAll(tokenizeAndCheck(new CoreDocument(article.getTitle())));
+      uniqueWords.addAll(tokenizeAndCheck(new CoreDocument(article.getBodyText())));
       for (String el : uniqueWords) {
         wordCounter.put(el, wordCounter.getOrDefault(el, 0) + 1);
       }
       uniqueWords.clear();
     }
 
-    // Step 1: Get the entry set from the map
-    Set<Map.Entry<String, Integer>> entrySet = wordCounter.entrySet();
+    // Get the entry set from the map and convert it to a list
+    List<Map.Entry<String, Integer>> list = new ArrayList<>(wordCounter.entrySet());
 
-    // Step 2: Convert the entry set to a list
-    List<Map.Entry<String, Integer>> list = new ArrayList<>(entrySet);
+    // Sort the list in descending order
+    list.sort((entry1, entry2) -> {
+      int valueComparison = entry2.getValue().compareTo(entry1.getValue());
+      if (valueComparison != 0) {
+        return valueComparison; // Sort by value primarily
+      }
+      return entry1.getKey().compareTo(entry2.getKey()); // Sort by key secondarily
+    });
 
-    // Step 3: Sort the list in descending order
-    Collections.sort(list, (o1, o2) -> o2.getValue().compareTo(o1.getValue()));
-
-//    // Step 4: Iterate over the sorted list and print the key-value pairs
-//    for (Map.Entry<String, Integer> entry : list) {
-//      System.out.println(entry.getKey() + ": " + entry.getValue());
-//    }
-
-    String filePath = "output.txt";
-
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
       for (int i = 0; i < 50; i++) {
         Map.Entry<String, Integer> entry = list.get(i);
         String key = entry.getKey();
         Integer value = entry.getValue();
-        writer.write(key + ": " + value);
+        writer.write(key + "=" + value);
         writer.newLine();
       }
     } catch (IOException e) {
       e.printStackTrace();
     }
+
+  }
+
+  /**
+   * Function to tokenize a {@code CoreDocument} and check that it contains a char or number, to filter out everything else
+   *
+   * @param document the document to check
+   * @return a Set containing the words found in the document
+   */
+  private static HashSet<String> tokenizeAndCheck(CoreDocument document) {
+    Pattern pattern = Pattern.compile(".*[a-zA-Z].*|.*\\d.*");
+    HashSet<String> uniqueWords = new HashSet<>();
+    pipeline.annotate(document);
+    for (CoreLabel tok : document.tokens()) {
+      if (!stopList.contains(tok.word()) && pattern.matcher(tok.word()).matches()) {
+        uniqueWords.add(tok.word().toLowerCase());
+      }
+    }
+    return uniqueWords;
   }
 
   /**
    * Function that loads the StopList
+   *
    * @return the loaded StopList
    */
   private static HashSet<String> loadStopList() {
     HashSet<String> stringList = new HashSet<>();
     try (BufferedReader reader = new BufferedReader(
-            new FileReader("./resources/coreNLP/stoplist.txt"))) {
+            new FileReader("./assets/stoplist.txt"))) {
       String line;
       while ((line = reader.readLine()) != null) {
         stringList.add(line);
