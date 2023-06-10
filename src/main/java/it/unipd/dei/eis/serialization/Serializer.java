@@ -84,6 +84,6 @@ public class Serializer {
    * @param articlesList the articles to serialize
    */
   public void serialize(Article[] articlesList) {
-    serialize(articlesList, "articles.xml");
+    serialize(articlesList, "./assets/articles.xml");
   }
 }
