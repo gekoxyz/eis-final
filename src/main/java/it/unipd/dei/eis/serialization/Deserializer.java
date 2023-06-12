@@ -3,10 +3,15 @@ package it.unipd.dei.eis.serialization;
 import it.unipd.dei.eis.Article;
 
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.*;
+
+import java.io.FileInputStream;
 
 /**
  * The Deserializer class is responsible for deserializing XML files and extracting article data from them.
@@ -22,6 +27,20 @@ public class Deserializer {
   public Article[] deserialize(String fileName) {
     Article[] articles = new Article[0];
     try {
+///////////////////////////
+      SAXParserFactory factory = SAXParserFactory.newInstance();
+      SAXParser parser = factory.newSAXParser();
+      XMLReader reader = parser.getXMLReader();
+
+      // Imposta l'ErrorHandler personalizzato
+      reader.setErrorHandler(new InvalidXMLCharsHandler());
+
+      // Parsing del file XML
+      reader.parse(new InputSource(new FileInputStream("assets/articles.xml")));
+
+////////////////////////
+
+
       // Parse the XML file into a Document object
       Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(fileName);
       // Get the root element of the XML document
@@ -56,5 +75,26 @@ public class Deserializer {
       return nodeList.item(0).getTextContent();
     }
     return null;
+  }
+}
+
+
+class InvalidXMLCharsHandler implements ErrorHandler {
+  public void warning(SAXParseException exception) throws SAXException {
+    // Gestione del warning
+  }
+
+  public void error(SAXParseException exception) throws SAXException {
+    // Verifica se l'errore è causato da un carattere non valido in UTF-8
+    if (exception.getMessage().contains("Invalid byte")) {
+      // Salta il carattere non valido
+      return;
+    }
+
+    // Gestione dell'errore
+  }
+
+  public void fatalError(SAXParseException exception) throws SAXException {
+    // Gestione dell'errore fatale
   }
 }
