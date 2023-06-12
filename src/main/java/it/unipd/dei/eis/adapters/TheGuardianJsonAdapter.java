@@ -22,7 +22,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 /**
- * Adapter for {@link <a href="https://open-platform.theguardian.com/">The Guardian API</a>}
+ * Adapter for <a href="https://open-platform.theguardian.com/">The Guardian API</a>}
  */
 public class TheGuardianJsonAdapter extends Adapter {
   /**
