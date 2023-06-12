@@ -13,13 +13,16 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * The Serializer class provides methods to serialize Article objects into an XML file.
+ */
 public class Serializer {
 
   /**
-   * Serialize article data to the xml file
+   * Serializes an array of Article objects into an XML file.
    *
-   * @param articlesList the articles to serialize
-   * @param fileName     the output file name
+   * @param articlesList The array of Article objects to be serialized.
+   * @param fileName     The name of the XML file to serialize the articles into.
    */
   public void serialize(Article[] articlesList, String fileName) {
     try {
@@ -37,7 +40,6 @@ public class Serializer {
         // Load the existing XML file
         document = documentBuilder.parse(xmlFile);
       }
-
 
       Element rootElement = document.getDocumentElement();
 
@@ -66,6 +68,12 @@ public class Serializer {
     }
   }
 
+  /**
+   * Writes the XML document to a file.
+   *
+   * @param xmlFile  The file to write the XML document to.
+   * @param document The XML document to be written.
+   */
   private void writeXmlToFile(File xmlFile, Document document) {
     try {
       TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -79,9 +87,9 @@ public class Serializer {
   }
 
   /**
-   * Serialize article data to the xml file with the default filename articles.xml
+   * Serializes an array of Article objects into a default XML file named "articles.xml" in the "./assets" directory.
    *
-   * @param articlesList the articles to serialize
+   * @param articlesList The array of Article objects to be serialized.
    */
   public void serialize(Article[] articlesList) {
     serialize(articlesList, "./assets/articles.xml");

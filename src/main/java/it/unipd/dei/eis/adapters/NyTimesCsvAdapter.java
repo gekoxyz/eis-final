@@ -17,19 +17,27 @@ import java.util.Comparator;
 public class NyTimesCsvAdapter extends Adapter {
 
   /**
-   * folder path as specified by the superclass {@code Adapter}
+   * Constructs a NyTimesCsvAdapter with the default folder path "./assets/nytimes/".
+   * The folder path is specified by the superclass Adapter.
    */
-
   public NyTimesCsvAdapter() {
     super("./assets/nytimes/");
   }
 
+  /**
+   * Constructs a NyTimesCsvAdapter with the specified folder path.
+   *
+   * @param folderPath The folder path where the CSV files are located.
+   */
   public NyTimesCsvAdapter(String folderPath) {
     super(folderPath);
   }
 
   /**
-   * Loads articles from the specified folder as specified by the superclass {@code Adapter}
+   * Loads articles from the specified list of files.
+   * It reads each file, parses the CSV data, and creates Article objects from the data.
+   *
+   * @param files The array of files containing the articles.
    */
   public void loadArticlesFromList(File[] files) {
     // Sorting alphabetically so Winzzoz and Linux/OSX have the same ordering

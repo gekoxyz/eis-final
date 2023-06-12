@@ -22,18 +22,29 @@ public abstract class Adapter {
 
   /**
    * Constructs an {@code Adapter} object with the default folder path.
+   * Initializes the articlesList and sets the folderName.
    */
   public Adapter() {
     this.articlesList = new ArrayList<>();
     this.folderName = getFolderName();
   }
 
+  /**
+   * Constructs an Adapter object with the specified folder path.
+   * Initializes the articlesList with an empty ArrayList, and sets the folderPath and folderName.
+   *
+   * @param folderPath The path to the folder containing the articles.
+   */
   public Adapter(String folderPath) {
     this.articlesList = new ArrayList<>();
     this.folderPath = folderPath;
     this.folderName = getFolderName();
   }
 
+  /**
+   * Loads all articles from the adapter's folder.
+   * It gets an array of all files in the folder and calls the loadArticlesFromList method to load the articles.
+   */
   public void loadAllArticles() {
     // Get an array of all files in the folder
     File[] files = new File(folderPath).listFiles();
@@ -41,29 +52,37 @@ public abstract class Adapter {
     loadArticlesFromList(files);
   }
 
+  /**
+   * Loads an article from a specific file.
+   *
+   * @param file The file containing the article to be loaded.
+   */
   public void loadArticleFromFileName(File file) {
     loadArticlesFromList(new File[]{file});
   }
 
-
   /**
    * Loads a list of articles from the adapter folder to the articlesList
    *
-   * @param files
+   * @param files The array of files containing the articles.
    */
   public abstract void loadArticlesFromList(File[] files);
 
   /**
-   * Returns the articles loaded by the adapter
+   * Returns the articles loaded by the adapter.
    *
-   * @return an array of {@code Article} objects containing the loaded articles
+   * @return An array of {@code Article} objects containing the loaded articles.
    */
   public Article[] getArticles() {
     return articlesList.toArray(new Article[0]);
   }
 
+  /**
+   * Extracts the folder name from the folder path.
+   *
+   * @return The folder name.
+   */
   public String getFolderName() {
-
     Pattern regexPattern = Pattern.compile("[^/]+/$");
     Matcher matcher = regexPattern.matcher(folderPath);
     String lastPart = "";

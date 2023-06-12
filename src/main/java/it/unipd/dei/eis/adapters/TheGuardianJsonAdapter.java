@@ -22,23 +22,29 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 /**
- * Adapter for <a href="https://open-platform.theguardian.com/">The Guardian API</a>}
+ * Adapter for <a href="https://open-platform.theguardian.com/">The Guardian API</a>
  */
 public class TheGuardianJsonAdapter extends Adapter {
   /**
-   * folder path as specified by the superclass {@code Adapter}
+   * Constructs a TheGuardianJsonAdapter with the default folder path "./assets/theguardian/".
+   * The folder path is specified by the superclass Adapter.
    */
-
   public TheGuardianJsonAdapter() {
     super("./assets/theguardian/");
   }
 
+  /**
+   * Constructs a TheGuardianJsonAdapter with the specified folder path.
+   *
+   * @param folderPath The folder path where the JSON files are located.
+   */
   public TheGuardianJsonAdapter(String folderPath) {
     super(folderPath);
   }
 
   /**
-   * Loads articles from the specified folder as specified by the superclass {@code Adapter}
+   * Loads a list of all the article files from the folder, then it calls the loadArticlesFromList
+   * method to load the articles from the file list.
    */
   public void loadAllArticles() {
     // Get an array of all files in the folder
@@ -47,6 +53,11 @@ public class TheGuardianJsonAdapter extends Adapter {
     loadArticlesFromList(files);
   }
 
+  /**
+   * Loads articles from the specified list of files.
+   *
+   * @param files The array of files containing the articles in JSON format.
+   */
   public void loadArticlesFromList(File[] files) {
     // Sorting alphabetically so Winzzoz and Linux/OSX have the same ordering
     Arrays.sort(files, Comparator.comparing(File::getName));
