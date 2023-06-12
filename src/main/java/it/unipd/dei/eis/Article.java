@@ -8,11 +8,11 @@ public class Article {
   /**
    * Title of the article
    */
-  private String title;
+  private String title = "";
   /**
    * Body of the article
    */
-  private String bodyText;
+  private String bodyText = "";
 
   /**
    * Creates a basic Article
@@ -23,6 +23,12 @@ public class Article {
   public Article(String title, String bodyText) {
     this.title = title;
     this.bodyText = bodyText;
+  }
+
+  /**
+   * Empty constructor, needed by the serializer
+   */
+  public Article() {
   }
 
   /**

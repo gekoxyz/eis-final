@@ -1,12 +1,13 @@
 package it.unipd.dei.eis.serialization;
 
 import it.unipd.dei.eis.Article;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import java.beans.XMLDecoder;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 /**
  * The Deserializer class is responsible for deserializing XML files and extracting article data from them.
@@ -22,21 +23,16 @@ public class Deserializer {
   public Article[] deserialize(String fileName) {
     Article[] articles = new Article[0];
     try {
-      // Parse the XML file into a Document object
-      Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(fileName);
-      // Get the root element of the XML document
-      Element rootElement = document.getDocumentElement();
-      // Extract data from the article elements
-      NodeList articleNodes = rootElement.getElementsByTagName("article");
-      articles = new Article[articleNodes.getLength()];
-      System.out.println("ARTICLE NODES LENGHT " + articleNodes.getLength());
-      for (int i = 0; i < articleNodes.getLength(); i++) {
-        Element articleElement = (Element) articleNodes.item(i);
-        String title = getElementValue(articleElement, "title");
-        String bodyText = getElementValue(articleElement, "bodyText");
-        articles[i] = new Article(title, bodyText);
-      }
-    } catch (Exception e) {
+      FileInputStream fileInputStream = new FileInputStream(fileName);
+      BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
+      XMLDecoder xmlDecoder = new XMLDecoder(bufferedInputStream);
+      articles = (Article[]) xmlDecoder.readObject();
+      xmlDecoder.close();
+      bufferedInputStream.close();
+      fileInputStream.close();
+
+      System.out.println("[INFO] - Deserialized " + articles.length + articles);
+    } catch (IOException e) {
       System.out.println("[ERROR] - Error while deserializing the XML");
       e.printStackTrace();
     }
