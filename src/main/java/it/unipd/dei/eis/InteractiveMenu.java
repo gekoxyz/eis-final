@@ -1,27 +1,31 @@
 package it.unipd.dei.eis;
 
-import it.unipd.dei.eis.adapters.NyTimesCsvAdapter;
-import it.unipd.dei.eis.adapters.Adapter;
 import it.unipd.dei.eis.adapters.TheGuardianJsonAdapter;
 import it.unipd.dei.eis.serialization.Serializer;
 
 import java.io.File;
-import java.lang.reflect.Array;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
 /**
- * Graphic menu for the command line
+ * The InteractiveMenu class represents a menu-driven interactive program that allows the user to perform various actions.
+ * The program includes options to download articles from The Guardian API, serialize articles to an XML file,
+ * analyze articles, and exit the program.
  */
 public class InteractiveMenu {
-  private Scanner scanner;
+  private final Scanner scanner;
 
+  /**
+   * Constructs an InteractiveMenu object and initializes the scanner to read user input from the console.
+   */
   public InteractiveMenu() {
     scanner = new Scanner(System.in);
   }
 
+  /**
+   * Runs the menu-driven program until the user chooses to exit.
+   * The user is presented with a menu of options and their choice is processed accordingly.
+   */
   public void runMenu() {
     int choice;
     do {
@@ -48,6 +52,9 @@ public class InteractiveMenu {
     scanner.close();
   }
 
+  /**
+   * Displays the menu options to the user.
+   */
   private void displayMenu() {
     System.out.println("Menu:");
     System.out.println("1. Download 1000 articles from The Guardian for the query nuclear power");
@@ -56,13 +63,18 @@ public class InteractiveMenu {
     System.out.println("4. Exit");
   }
 
-
+  /**
+   * Calls the method to download articles from The Guardian API.
+   * This method invokes the TheGuardianJsonAdapter class to fetch the articles and store them.
+   */
   private void callTheGuardianApi() {
-    TheGuardianJsonAdapter theGuardianJsonAdapter = new TheGuardianJsonAdapter();
     // 1000/200 = 5 pages needed
-    theGuardianJsonAdapter.callApi(5, "nuclear%20power");
+    new TheGuardianJsonAdapter().callApi(5, "nuclear%20power");
   }
 
+  /**
+   * Displays a submenu for selecting files to serialize and invokes the appropriate adapter to perform serialization.
+   */
   private void serializerSubMenu() {
     File[] folders = getAllFoldersInPath("./assets/");
     ArrayList<File> selectedFiles = new ArrayList<>();
@@ -107,13 +119,18 @@ public class InteractiveMenu {
     }
   }
 
+  /**
+   * Chooses the appropriate adapter for each file in the given array and serializes the articles
+   *
+   * @param filesToSerialize An array of files to serialize.
+   */
   private void chooseAdapterAndSerialize(File[] filesToSerialize) {
     // we have an array of files to serialize. we want to know what adapter they correspond to and instantiate
     //  that adapter after that we want to parse the files to Articles, and when all are done serialize
 
+    // Let the user choose whether to delete the XML file and serialize to a new one or continue adding articles to the existing file
     if (new File("./assets/articles.xml").exists()) {
       boolean exit = false;
-
       while (!exit) {
         System.out.println("There's already an articles file. If you don't delete it the articles you choose will be appended to the current file");
         System.out.println("Do you want to delete it? y/n");
@@ -149,7 +166,7 @@ public class InteractiveMenu {
     for (File fileToSerialize : filesToSerialize) {
 
       for (String adapterClassName : adaptersClassNames) {
-        // se l'inizio del nome dell'adapter (TODO: + estensione) corrisponde al nome della cartella del file da serializzare ho fatto bingo
+        // if the adapter name starts with the folder name i got the correct adapter
         String folderName = getFolderNameFromFileName(fileToSerialize.getName());
         if (adapterClassName.toLowerCase().startsWith(folderName)) {
           // call the appropriate classes with reflection
@@ -173,6 +190,12 @@ public class InteractiveMenu {
     }
   }
 
+  /**
+   * Retrieves the folder name from the given file name.
+   *
+   * @param fileName The name of the file.
+   * @return The folder name extracted from the file name.
+   */
   private String getFolderNameFromFileName(String fileName) {
     int underscoreIndex = fileName.indexOf("_");
     String truncatedString = "";
@@ -184,6 +207,12 @@ public class InteractiveMenu {
     return truncatedString;
   }
 
+  /**
+   * Selects the files to be serialized from the given array of file names.
+   *
+   * @param fileNames An array of File objects representing the available files to choose from.
+   * @return An array of File objects representing the selected files to be serialized.
+   */
   private File[] selectFilesToSerialize(File[] fileNames) {
     Set<File> selectedFiles = new HashSet<>();
 
@@ -220,6 +249,12 @@ public class InteractiveMenu {
     return selectedFiles.toArray(new File[0]);
   }
 
+  /**
+   * Retrieves all folders within the specified folder path.
+   *
+   * @param folderPath The path of the folder to retrieve subfolders from.
+   * @return An array of File objects representing the subfolders within the folder.
+   */
   private File[] getAllFoldersInPath(String folderPath) {
     ArrayList<File> folders = new ArrayList<>();
     File folder = new File(folderPath);
@@ -235,6 +270,12 @@ public class InteractiveMenu {
     return folders.toArray(new File[0]);
   }
 
+  /**
+   * Retrieves the names of all files in the specified folder path.
+   *
+   * @param folderPath The path of the folder to retrieve file names from.
+   * @return An array of file names in the folder.
+   */
   private String[] getAllFilesInPath(String folderPath) {
     ArrayList<String> fileNames = new ArrayList<>();
     File folder = new File(folderPath);
@@ -251,6 +292,10 @@ public class InteractiveMenu {
     return fileNames.toArray(new String[0]);
   }
 
+  /**
+   * Analyzes the articles stored in XML files.
+   * The user is prompted to select a file to analyze, and the Analyzer class is invoked to perform the analysis.
+   */
   private void analyzeArticles() {
     String[] fileNames = getAllFilesInPath("./assets/");
     // remove strings that don't end with .xml
@@ -290,7 +335,11 @@ public class InteractiveMenu {
     }
   }
 
-
+  /**
+   * Reads an integer choice entered by the user from the console.
+   *
+   * @return The integer value entered by the user.
+   */
   private int readIntChoice() {
     int choice;
     while (true) {
@@ -305,5 +354,4 @@ public class InteractiveMenu {
     }
     return choice;
   }
-
 }

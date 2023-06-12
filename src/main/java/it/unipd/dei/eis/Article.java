@@ -17,7 +17,7 @@ public class Article {
   /**
    * Creates a basic Article
    *
-   * @param title Title of the article
+   * @param title    Title of the article
    * @param bodyText Body of the article
    */
   public Article(String title, String bodyText) {
@@ -25,22 +25,47 @@ public class Article {
     this.bodyText = bodyText;
   }
 
+  /**
+   * Retrieves the title of the article.
+   *
+   * @return The title of the article as a string.
+   */
   public String getTitle() {
     return title;
   }
 
+  /**
+   * Sets the title of the article.
+   *
+   * @param title The title of the article as a string.
+   */
   public void setTitle(String title) {
     this.title = title;
   }
 
+  /**
+   * Retrieves the body text of the article.
+   *
+   * @return The body text of the article as a string.
+   */
   public String getBodyText() {
     return bodyText;
   }
 
+  /**
+   * Sets the body text of the article.
+   *
+   * @param bodyText The body text of the article as a string.
+   */
   public void setBodyText(String bodyText) {
     this.bodyText = bodyText;
   }
 
+  /**
+   * Returns a string representation of the article.
+   *
+   * @return A string representation of the article.
+   */
   @Override
   public String toString() {
     return "<article>\n" +
