@@ -2,35 +2,53 @@
 
 ---
 
-## Panoramica (implementazione dele funzionalità)
+## Panoramica (implementazione delle funzionalità)
 
-Il programma prende un generico articolo di giornale da una delle sorgenti disponibili e lo fa passare tramite un ```Adapter```,
-il cui compito è quello di convertire dal formato originale (JSON, CSV...) ad un oggetto ```Article```. La classe ```Adapter```
+Il programma prende un generico articolo di giornale da una delle sorgenti disponibili e lo fa passare tramite
+un ```Adapter```,
+il cui compito è quello di convertire dal formato originale (JSON, CSV...) ad un oggetto ```Article```. La
+classe ```Adapter```
 è astratta e ciò permette di aggiungere nuovi Adapter personalizzati relativi a nuove sorgenti. Una volta ottenuto,
 l'array di ```Article``` può essere passato al ```Serializer``` per essere
-serializzato in xml oppure all'```Analyzer``` per essere analizzato.
+serializzato in xml e successivamente all'```Analyzer``` per essere analizzato.
 
-## Come installare il software
-- Scaricare il programma
-- Registrare una key per l'API di The Guardian all'indirizzo https://open-platform.theguardian.com/access/
-- Nella directory principale del progetto, creare un file denominato ".env"
-- Inserire all'interno del file .env la propria API key di The Guardian con la sintassi seguente: THEGUARDIAN_API_KEY=la-vostra-chiave
-- Con il terminale aprire la directory principale del progetto e digitare il comando
+## Compilare ed eseguire il software
+
+Aprire un terminale e entrare nella directory in cui si vuole scaricare il progetto ed eseguire i seguenti comandi
+
+```
+git clone https://github.com/gekoxyz/eis-final
+cd eis-final
+```
+
+Registrare una key per l'API di The Guardian all'indirizzo https://open-platform.theguardian.com/access/
+
+Scrivere questo comando nel terminale sostituendo key con la chiave fornita da The Guardian
+
+```
+echo "THEGUARDIAN_API_KEY=key" > .env
+```
+
+Per compilare il progetto e generare il jar
+
 ```
 mvn package
 ```
-oppure per non eseguire nessun test
+
+oppure per farlo senza eseguire i test (si risparmia del tempo)
+
 ```
 mvn package -DskipTests
 ```
-- Eseguire il comando
+
+spostare nella directory principale il jar, di modo da avere il corretto accesso alla cartella assets e al file .env
+
 ```
-mv ./target/eis-final-1.0-SNAPSHOT.jar ./
+mv ./target/eis-final-1.0-SNAPSHOT.jar ./..
 ```
 
+e infine per eseguire
 
-## Eseguire il software
-Per eseguire il software aprire un terminale nella directory principale del programma e utilizzare:
 ```
 java -jar eis-final-1.0-SNAPSHOT.jar
  ```
@@ -39,7 +57,8 @@ java -jar eis-final-1.0-SNAPSHOT.jar
 
 Come si può leggere dal ```pom.xml``` sono state utilizzate le seguenti librerie:
 
-### OpenCsv 
+### OpenCsv
+
 Utilizzato per il parsing dei file CSV nell'adapter degli articoli del New York Times
 
 ```
@@ -51,7 +70,8 @@ Utilizzato per il parsing dei file CSV nell'adapter degli articoli del New York 
 ```
 
 ### Jackson
-Utilizzato per il parsing dei file JSON nell'adapter degli articoli di The Guardian 
+
+Utilizzato per il parsing dei file JSON nell'adapter degli articoli di The Guardian
 
 ```
 <dependency>
@@ -61,7 +81,8 @@ Utilizzato per il parsing dei file JSON nell'adapter degli articoli di The Guard
 </dependency>
 ```
 
-### CoreNLP 
+### CoreNLP
+
 Per tokenizzare gli articoli (Guardando nel pom ci sono anche altre dipendenze necessarie legata a questa ma
 CoreNLP è la principale)
 
@@ -73,7 +94,8 @@ CoreNLP è la principale)
 </dependency>
 ```
 
-### JUnit 
+### JUnit
+
 Per testare il codice
 
 ```
@@ -85,7 +107,8 @@ Per testare il codice
 </dependency>
 ```
 
-### DotEnv 
+### DotEnv
+
 Per caricare la key di The Guardian nelle variabili d'ambiente
 
 ```
@@ -95,99 +118,3 @@ Per caricare la key di The Guardian nelle variabili d'ambiente
     <version>2.3.2</version>
 </dependency>
 ```
-
----
-
-Requirements:
-
-- jUnit tests
-- Javadoc
-- UML
-- zip/tar.gz archive
-
-Deliverables:
-
-- [ ] Use case rappresentati con diagrammi UML e descrizione in linguaggio naturale strutturato
-- [ ] Domain model in UML
-- [ ] Design model in UML
-- [ ] Codice (java + class/jar)
-- [ ] Test (documento + report dei test) vd mail prof, + test analyzer e test callApi
-- [ ] manuale
-    - [x] breve panoramica ad alto livello del progetto (come sono state implementate le funzionalità)
-    - [ ] come installare ed eseguire il software
-    - [x] quali funzioni sono state riutilizzate da librerie esistenti (con versione delle librerie)
-
-Progetto:
-Sistema software per scaricare articoli da testate giornalistiche online e visualizzazione dei termini più importanti
-nell'insieme degli articoli scaricati
-
-(termine = parola che compare nel testo dell'articolo)
-
-estrarre i 50 termini con maggior peso e memorizzarli in un file txt dove ciascuna riga ha il formato "<termine> <peso>"
-come segue:
-
-test 32
-nuclear 16
-fusion 7
-power 7
-
-(se pareggio in termine di peso si da preferenza in base all'ordine alfabetico)
-per estrarre i termini: StringTokenizer oppure CoreNLP
-
-https://docs.oracle.com/javase/8/docs/api/java/util/StringTokenizer.html
-
-https://stanfordnlp.github.io/CoreNLP/
-https://stanfordnlp.github.io/CoreNLP/pipeline.html
-https://stanfordnlp.github.io/CoreNLP/tokenize.html
-
-Sorgenti:
-
-- CSV su moodle
-- the guardian api
-
-Richieste:
-
-- supportare nuove sorgenti
-- download -> salvataggio su file (con lo stesso formato per tutti gli articoli di tutte le sorgenti, scrivendo il
-  serializzatore e deserializzatore)
-- supporto a nuove modalità di memorizzazione ed accesso agli articoli ?cosa vuol dire?
-- estrarre termini e peso a partire dal file in cui è memorizzato l'articolo
-- supporto a nuove strutture per memorizzare ed avere accesso ai termini più importanti
-- chiedere all'utente se vuole eseguire solo il download, solo l'estrazione dei termini a partire dal file o entrambe le
-  azioni. L’utente deve poter specificare se eseguire solo il download, solo l’estrazione dei termini a
-  partire dai file in cui sono stati memorizzati gli articoli, o entrambe le azioni in sequenza.
-
-## Article
-
-### The Guardian
-
-- id
-- ~~type~~ (useless since it's always an article)
-- sectionId (us-news, uk-news, environment)
-- sectionName  (the one above but with uppercase and spaces)
-- webPublicationDate
-- webTitle
-- webUrl (html content url)
-- apiUrl (raw content url)
-- ~~isHosted~~ (even the guardian doesn't know what this means)
-
-### NYTimes
-
-- Identifier
-- Url
-- Title
-- Fulltext
-- Date
-- Source set
-- Source
-
-### Article
-
-- id
-- webUrl
-- apiUrl
-- title
-- body_text
-- publication_date
-- publisher (nytimes, the guardian...)
-- source
