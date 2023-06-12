@@ -176,6 +176,7 @@ public class InteractiveMenu {
     temp.remove("Adapter");
     adaptersClassNames = temp.toArray(new String[0]);
     Serializer serializer = new Serializer();
+    ArrayList<Article> articlesToSerialize = new ArrayList<>();
 
     for (File fileToSerialize : filesToSerialize) {
 
@@ -195,13 +196,14 @@ public class InteractiveMenu {
             method.invoke(instance, new File("./assets/" + folderName + "/" + fileToSerialize.getName()));
             // Invoke the method getArticles to serialize to xml
             method = clazz.getMethod("getArticles");
-            serializer.serialize((Article[]) method.invoke(instance), "./assets/articles.xml");
+            articlesToSerialize.addAll(Arrays.asList((Article[]) method.invoke(instance)));
           } catch (Exception e) {
             e.printStackTrace();
           }
         }
       }
     }
+    serializer.serialize(articlesToSerialize.toArray(new Article[0]), "./assets/articles.xml");
   }
 
   /**

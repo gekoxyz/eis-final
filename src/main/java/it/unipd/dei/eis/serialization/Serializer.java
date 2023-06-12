@@ -4,6 +4,9 @@ import it.unipd.dei.eis.Article;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -11,7 +14,14 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * The Serializer class provides methods to serialize Article objects into an XML file.
@@ -30,16 +40,11 @@ public class Serializer {
       Document document;
       DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
-      if (!xmlFile.exists()) {
-        // Create a new XML file if it doesn't exist
-        document = documentBuilder.newDocument();
-        document.appendChild(document.createElement("articles"));
-        writeXmlToFile(xmlFile, document);
-        System.out.println("[INFO] - XML file created successfully.");
-      } else {
-        // Load the existing XML file
-        document = documentBuilder.parse(xmlFile);
-      }
+      // Create a new XML file if it doesn't exist
+      document = documentBuilder.newDocument();
+      document.appendChild(document.createElement("articles"));
+      writeXmlToFile(xmlFile, document);
+      System.out.println("[INFO] - XML file created successfully.");
 
       Element rootElement = document.getDocumentElement();
 
@@ -62,7 +67,7 @@ public class Serializer {
       // Write the modified XML document back to the file
       writeXmlToFile(xmlFile, document);
       System.out.println("[INFO] - Added " + articlesList.length + " articles to the XML file");
-    } catch (ParserConfigurationException | IOException | org.xml.sax.SAXException e) {
+    } catch (ParserConfigurationException e) {
       System.out.println("[ERROR] - Error while serializing articles");
       e.printStackTrace();
     }
