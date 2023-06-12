@@ -94,8 +94,8 @@ public class TheGuardianJsonAdapter extends Adapter {
    *
    * @param pages the number of pages to be downloaded
    */
-  public String[] callApi(int pages, String query) {
-    ArrayList<String> downloadedFiles = new ArrayList<>();
+  public File[] callApi(int pages, String query) {
+    ArrayList<File> downloadedFiles = new ArrayList<>();
     // The dotenv loads the private API key to make the call to The Guardian
     Dotenv dotenv = Dotenv.load();
     // The current timestamp is used as the filename
@@ -122,12 +122,12 @@ public class TheGuardianJsonAdapter extends Adapter {
           writer.write(jsonResponse);
         }
         System.out.println("[INFO] - API response saved to " + filePath);
-        downloadedFiles.add(fileName);
+        downloadedFiles.add(new File(fileName));
       }
     } catch (IOException e) {
       System.err.println("[INFO] - Error calling the API: " + e.getMessage());
     }
-    return downloadedFiles.toArray(new String[0]);
+    return downloadedFiles.toArray(new File[0]);
   }
 
   /**

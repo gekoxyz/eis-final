@@ -42,13 +42,16 @@ public class InteractiveMenu {
           analyzeArticles();
           break;
         case 4:
+          downloadAndAnalyze();
+          break;
+        case 5:
           System.out.println("Exiting...");
           break;
         default:
           System.out.println("Invalid choice. Please try again.");
       }
       System.out.println();
-    } while (choice != 4);
+    } while (choice != 5);
     scanner.close();
   }
 
@@ -60,7 +63,18 @@ public class InteractiveMenu {
     System.out.println("1. Download 1000 articles from The Guardian for the query nuclear power");
     System.out.println("2. Serialize articles to xml file");
     System.out.println("3. Analyze articles");
-    System.out.println("4. Exit");
+    System.out.println("4. Download 1000 articles from The Guardian, serialize them and analyze them (sequential actions)");
+    System.out.println("5. Exit");
+  }
+
+  /**
+   * Calls the method to download articles from The Guardian API, serializes the articles and analyzes them as
+   * requested by the assignment
+   */
+  private void downloadAndAnalyze() {
+    File[] downloadedFiles = new TheGuardianJsonAdapter().callApi(5, "nuclear%20power");
+    chooseAdapterAndSerialize(downloadedFiles);
+    analyzeArticles();
   }
 
   /**
