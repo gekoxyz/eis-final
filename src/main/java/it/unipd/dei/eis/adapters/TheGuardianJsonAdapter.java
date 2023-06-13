@@ -93,6 +93,8 @@ public class TheGuardianJsonAdapter extends Adapter {
    * {@code https://content.guardianapis.com/search?api-key=********&page=i&show-fields=bodyText&page-size=200&q=query}
    *
    * @param pages the number of pages to be downloaded
+   * @param query the search query to use for the API call
+   * @return an array of downloaded files containing the API responses
    */
   public File[] callApi(int pages, String query) {
     ArrayList<File> downloadedFiles = new ArrayList<>();
