@@ -23,7 +23,7 @@ cd eis-final
 
 Registrare una key per l'API di The Guardian all'indirizzo https://open-platform.theguardian.com/access/
 
-Scrivere questo comando nel terminale sostituendo key con la chiave fornita da The Guardian
+Scrivere questo comando nel terminale sostituendo key con la chiave fornita da The Guardian (su winzozz creare manualmente il file)
 
 ```
 echo "THEGUARDIAN_API_KEY=key" > .env
@@ -44,7 +44,7 @@ mvn package -DskipTests
 spostare nella directory principale il jar, di modo da avere il corretto accesso alla cartella assets e al file .env
 
 ```
-mv ./target/eis-final-1.0-SNAPSHOT.jar ./..
+mv ./target/eis-final-1.0-SNAPSHOT.jar ./
 ```
 
 e infine per eseguire
