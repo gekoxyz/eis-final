@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 /**
@@ -41,8 +42,18 @@ public class TheGuardianJsonAdapterTest {
     @Test
     @Order(1)
     public void testLoadArticles() {
+        // get an array of File
+        // create ArrayList to add all files provided (it can be single add for every file, but I like this more)
+        ArrayList<File> fileList = new ArrayList<>();
+        for(int i = 1; i < 11; i++ ) {
+            if(i == 10) fileList.add(new File("./assets/theguardian/theguardian_articles_v1_p" + i + ".json"));
+            else fileList.add(new File("./assets/theguardian/theguardian_articles_v1_p0" + i + ".json"));
+        }
+        // change ArrayList to File[]
+        File[] files = fileList.toArray(new File[fileList.size()]);
 
-        adapter.loadAllArticles();
+        // start check if files are loaded correctly
+        adapter.loadArticlesFromList(files);
         serializer.serialize(adapter.getArticles());
 
         // Verify that articles are loaded
@@ -85,7 +96,7 @@ public class TheGuardianJsonAdapterTest {
 
     /**
      * Test the {@link TheGuardianJsonAdapter#callApi()} method.
-     *
+     * Create temporary directory, download files, check if the files downloaded match with provided number and then remove all the things that were created
      */
     @Test
     public void callApiTest() {
@@ -93,8 +104,6 @@ public class TheGuardianJsonAdapterTest {
             // Create a temporary directory
             Path path = Paths.get("./tempDir");
             Files.createDirectories(path);
-
-            //TODO: la directory la crea in un percorso esterno al progetto, fare in modo che il percorso sia il root del progetto
 
             TheGuardianJsonAdapter adapterForApi = new TheGuardianJsonAdapter("./tempDir/");
 
@@ -113,6 +122,13 @@ public class TheGuardianJsonAdapterTest {
         }
 
     }
+
+    /**
+     * Deletes a directory and all its contents recursively.
+     *
+     * @param directory the path to the directory to be deleted
+     * @throws IOException if an I/O error occurs during the deletion process
+     */
     private static void deleteDirectory(Path directory) throws IOException {
         Files.walk(directory)
                 .sorted((p1, p2) -> -p1.compareTo(p2))

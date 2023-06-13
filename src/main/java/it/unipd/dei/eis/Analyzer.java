@@ -41,10 +41,9 @@ public class Analyzer {
 
   /**
    * Function to analyze the articles
-   *
-   * @param inputFile
-   * @param outputFile
-   */
+   * @param inputFile  the path of the input file containing serialized articles
+   * @param outputFile the path of the output file to write the word frequency report
+   * */
   public void analyze(String inputFile, String outputFile) {
     Deserializer deserializer = new Deserializer();
     Article[] articles = deserializer.deserialize(inputFile);
