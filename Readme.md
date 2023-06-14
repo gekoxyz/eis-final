@@ -13,6 +13,7 @@ l'array di ```Article``` può essere passato al ```Serializer``` per essere
 serializzato in xml e successivamente all'```Analyzer``` per essere analizzato.
 
 ## Compilare ed eseguire il software
+Nel progetto consegnato su moodle il jar NON è già compilato. Vanno seguite queste istruzioni per compilare.
 
 Aprire un terminale e entrare nella directory in cui si vuole scaricare il progetto ed eseguire i seguenti comandi
 
@@ -23,7 +24,7 @@ cd eis-final
 
 Registrare una key per l'API di The Guardian all'indirizzo https://open-platform.theguardian.com/access/
 
-Scrivere questo comando nel terminale sostituendo key con la chiave fornita da The Guardian (su winzozz creare manualmente il file)
+Scrivere questo comando nel terminale sostituendo key con la chiave fornita da The Guardian (su Windows creare manualmente il file con i contenuti specificati nell'echo)
 
 ```
 echo "THEGUARDIAN_API_KEY=key" > .env
